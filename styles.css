@@ -73,10 +73,20 @@ min-height: 0;
 /* Texto completo */
 .blog-post-body {
     font-size: 17px;
-    line-height: 1.9;
+    line-height: 1.45;
     color: #333;
-    white-space: pre-wrap;
+    white-space: normal;
     overflow-wrap: anywhere;
+}
+
+.blog-post-body p {
+    margin-top: 0 !important;
+    margin-bottom: 0.4em !important;
+    padding: 0 !important;
+}
+
+.blog-post-body p + p {
+    margin-top: 0 !important;
 }
 
 /* Vídeos */

@@ -57,7 +57,18 @@ const blogMode = document.body.dataset.blogMode;
       }
     }
 
-    if (item.body) article.append(make('div', 'blog-post-body', item.body));
+   if (item.body) {
+  const body = make('div', 'blog-post-body');
+
+  // Aceita conteúdo textual salvo pelo Pages CMS.
+  const source = String(item.body);
+
+  // Converte Markdown em HTML e sanitiza o resultado.
+  const rendered = window.marked.parse(source);
+  body.innerHTML = window.DOMPurify.sanitize(rendered);
+
+  article.append(body);
+}
     return article;
   }
 

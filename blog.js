@@ -221,10 +221,15 @@
     }
 
     // Publicações de texto com imagens, citações e vídeos incorporados.
-    if (item.body) {
-      article.append(renderBody(String(item.body)));
-    }
+if (item.body) {
+    const body = make('div', 'blog-post-body');
 
+    body.innerHTML = DOMPurify.sanitize(item.body, {
+        USE_PROFILES: { html: true }
+    });
+
+    article.append(body);
+}
     return article;
   }
 

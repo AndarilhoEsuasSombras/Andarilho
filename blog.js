@@ -32,7 +32,7 @@ const blogMode = document.body.dataset.blogMode;
   function renderItem(item) {
     const article = make('article', 'blog-post-card');
     const meta = make('div', 'blog-post-meta');
-    meta.append(make('span', 'blog-post-category', item.category || (item.kind === 'video' ? 'Audiovisual' : ' ')));
+    meta.append(make('span', 'blog-post-category', item.category || (item.kind === '' ? '' : '')));
     if (item.date) meta.append(make('span', 'blog-post-date', formatDate(item.date)));
     article.append(meta);
     article.append(make('h2', 'blog-post-title', item.title || 'Sem título'));

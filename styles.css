@@ -116,3 +116,45 @@ min-height: 0;
     }
 }
 
+/* Diagramação das publicações do blog */
+.blog-post-body {
+  font-size: 17px;
+  line-height: 1.65;
+  overflow-wrap: break-word;
+}
+
+/* Reduz o espaço entre os parágrafos */
+.blog-post-body p {
+  margin-top: 0;
+  margin-bottom: 0.8em;
+}
+
+/* Evita espaços excessivos em citações */
+.blog-post-body blockquote {
+  margin: 1em 0;
+  padding-left: 1em;
+}
+
+/* Controla o tamanho das imagens */
+.blog-post-body img {
+  display: block;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  max-height: 520px;
+  object-fit: contain;
+  margin: 1.2em auto;
+}
+
+/* Evita que listas fiquem muito espaçadas */
+.blog-post-body ul,
+.blog-post-body ol {
+  margin-top: 0.4em;
+  margin-bottom: 0.8em;
+  padding-left: 1.5em;
+}
+
+/* Reduz o espaço entre os itens das listas */
+.blog-post-body li {
+  margin-bottom: 0.25em;
+}

@@ -40,16 +40,18 @@ content:
         label: Link do vídeo
         type: string
 
-      - name: published
-        label: Publicar no site
-        type: boolean
-        default: true
-
       - name: blog
         label: Blog de destino
         type: select
         required: true
         options:
           values:
-            - reflexoes
-            - diario
+            - Filosofia
+            - Literatura
+            - Poesia
+            - Temas Diversos
+            
+      - name: published
+        label: Publicar no site
+        type: boolean
+        default: true

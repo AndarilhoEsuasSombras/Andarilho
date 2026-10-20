@@ -183,8 +183,9 @@
 
     // Reconhece [VIDEO](URL), mesmo que o editor tenha
     // colocado a marcação no meio de um parágrafo.
-    const videoPattern =
-      /\[VIDEO\]\((https?:\/\/[^\s)]+)\)/gi;
+
+const videoPattern =
+  /\[VIDEO\]\(\s*(?:<a\b[^>]*href=["'](https?:\/\/[^"']+)["'][^>]*>[\s\S]*?<\/a>|(https?:\/\/[^\s)]+))\s*\)/gi;
 
     let lastIndex = 0;
     let match;
@@ -196,7 +197,7 @@
         source.slice(lastIndex, match.index)
       );
 
-      const video = createYouTubeVideo(match[1]);
+const video = createYouTubeVideo(match[1] || match[2]);
 
       if (video) {
         body.append(video);

@@ -9,7 +9,10 @@
     "published": true
   },
   {
-<img src="/Andarilho/media/guimaraes.jpg" alt="Guimarães Rosa">
+"title": "Grande Sertão: Veredas não é \"literatura\" queer",
+    "date": "2026-06-26",
+    "summary": "do analfabetismo à pobreza existencial, o brasileiro vai se colocando no seu lugar - o lixo",
+    "body": <img src="/Andarilho/media/guimaraes.jpg" alt="Guimarães Rosa">
 
 <blockquote>
   <p>Tais obras são como espelhos; se um macaco olhar para dentro delas, nunca poderá ver um apóstolo.</p>
@@ -78,7 +81,10 @@
 </ul>
 
 <p>Em cinco, dez, anos, onde estarão esses livros? Em cem anos! Talvez nos compêndios psiquiátricos, se muito. Mas Guimarães Rosa permanecerá, apesar das mãos sujas que insistem em emporcalhar seus livros.</p>
-  },
+    "kind": "text",
+    "blog": "Literatura",
+    "published": true 
+},
   {
     "title": "POESISA",
     "date": "2026-10-19",

@@ -214,6 +214,73 @@ const video = createYouTubeVideo(match[1] || match[2]);
     return body;
   }
 
+  
+  // Arquivo de publicações exclusivo da página Filosofia.
+  function renderPhilosophyArchive(items) {
+    const archive = make('section', 'philosophy-archive');
+    const controls = make('div', 'archive-controls');
+    const label = make('label', 'archive-label', 'Selecionar publicação');
+
+    const select = document.createElement('select');
+    select.className = 'archive-select';
+    select.setAttribute('aria-label', 'Selecionar publicação');
+
+    items.forEach((item, index) => {
+      const option = document.createElement('option');
+      option.value = String(index);
+      option.textContent = item.title || 'Sem título';
+      select.append(option);
+    });
+
+    label.append(select);
+    controls.append(label);
+
+    const navigation = make('div', 'archive-navigation');
+    const previous = make('button', 'archive-button', '← Anterior');
+    const next = make('button', 'archive-button', 'Próxima →');
+    const counter = make('span', 'archive-counter');
+
+    previous.type = 'button';
+    next.type = 'button';
+
+    const postContainer = make('div', 'archive-current-post');
+
+    let currentIndex = 0;
+
+    function showPost(index) {
+      currentIndex = Math.max(0, Math.min(index, items.length - 1));
+
+      select.value = String(currentIndex);
+      counter.textContent =
+        `Publicação ${currentIndex + 1} de ${items.length}`;
+
+      previous.disabled = currentIndex === 0;
+      next.disabled = currentIndex === items.length - 1;
+
+      postContainer.replaceChildren(renderItem(items[currentIndex]));
+    }
+
+    select.addEventListener('change', () => {
+      showPost(Number(select.value));
+    });
+
+    previous.addEventListener('click', () => {
+      showPost(currentIndex - 1);
+    });
+
+    next.addEventListener('click', () => {
+      showPost(currentIndex + 1);
+    });
+
+    navigation.append(previous, counter, next);
+    archive.append(controls, navigation, postContainer);
+
+    showPost(0);
+
+    return archive;
+  }
+
+  
   // Monta cada publicação.
   function renderItem(item) {
     const article = make('article', 'blog-post-card');
@@ -330,9 +397,18 @@ const video = createYouTubeVideo(match[1] || match[2]);
         return;
       }
 
+
+      // Filosofia usa o novo sistema de arquivo.
+      if (currentBlog === 'filosofia') {
+        feed.append(renderPhilosophyArchive(visible));
+        return;
+      }
+
+      // As demais páginas continuam com o formato atual.
       visible.forEach((item) => {
         feed.append(renderItem(item));
       });
+
     })
     .catch((error) => {
       console.error('Erro ao carregar o blog:', error);

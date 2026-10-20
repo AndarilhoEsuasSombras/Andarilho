@@ -224,9 +224,14 @@
 if (item.body) {
     const body = make('div', 'blog-post-body');
 
-    body.innerHTML = DOMPurify.sanitize(item.body, {
-        USE_PROFILES: { html: true }
-    });
+    if (window.DOMPurify) {
+        body.innerHTML = window.DOMPurify.sanitize(item.body, {
+            USE_PROFILES: { html: true }
+        });
+    } else {
+        body.textContent = item.body;
+        console.error('DOMPurify não carregou.');
+    }
 
     article.append(body);
 }

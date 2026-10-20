@@ -102,8 +102,68 @@
       const source = String(item.body);
 
       if (window.marked && window.DOMPurify) {
-        const rendered = window.marked.parse(source);
-        body.innerHTML = window.DOMPurify.sanitize(rendered);
+        const videoPattern =
+  /^\[VIDEO\]\((https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=[\w-]+|youtu\.be\/[\w-]+)[^\s)]*)\)$/gm;
+
+let lastIndex = 0;
+let match;
+const fragment = document.createDocumentFragment();
+
+while ((match = videoPattern.exec(source)) !== null) {
+  const textBefore = source.slice(lastIndex, match.index);
+
+  if (textBefore.trim()) {
+    const html = window.marked.parse(textBefore);
+    const safe = window.DOMPurify.sanitize(html);
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = safe;
+    fragment.append(...wrapper.childNodes);
+  }
+
+  const videoId = (() => {
+    try {
+      const url = new URL(match[1]);
+      return url.hostname.includes('youtu.be')
+        ? url.pathname.split('/').filter(Boolean)[0]
+        : url.searchParams.get('v');
+    } catch {
+      return null;
+    }
+  })();
+
+  if (videoId && /^[\w-]+$/.test(videoId)) {
+    const video = document.createElement('div');
+    video.className = 'blog-video-frame';
+
+    const iframe = document.createElement('iframe');
+    iframe.src =
+      'https://www.youtube-nocookie.com/embed/' +
+      encodeURIComponent(videoId);
+    iframe.title = 'Vídeo do YouTube';
+    iframe.loading = 'lazy';
+    iframe.allow =
+      'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+    iframe.allowFullscreen = true;
+
+    video.append(iframe);
+    fragment.append(video);
+  }
+
+  lastIndex = videoPattern.lastIndex;
+}
+
+const remaining = source.slice(lastIndex);
+
+if (remaining.trim()) {
+  const html = window.marked.parse(remaining);
+  const safe = window.DOMPurify.sanitize(html);
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = safe;
+  fragment.append(...wrapper.childNodes);
+}
+
+body.replaceChildren(fragment);
 
         // Corrige imagens para o endereço do GitHub Pages.
         body.querySelectorAll('img').forEach((img) => {

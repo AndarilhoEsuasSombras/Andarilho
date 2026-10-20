@@ -185,9 +185,50 @@
     }
 
     // Publicações de texto com imagens, citações e vídeos incorporados.
-    if (item.body) {
-      article.append(renderBody(String(item.body)));
+
+if (item.body) {
+    const body = make('div', 'blog-post-body');
+    const source = String(item.body);
+
+    // Detecta Markdown dentro do HTML gerado pelo editor.
+    const hasMarkdown =
+        /!\[[^\]]*\]\([^)]+\)/.test(source) ||
+        /\[VIDEO\]\(/i.test(source) ||
+        /^\s*&gt;\s?/mi.test(source) ||
+        /^\s*>+\s?/m.test(source) ||
+        /\*\*[^*]+\*\*/.test(source);
+
+    let html;
+
+    if (hasMarkdown) {
+        // Remove os parágrafos externos que envolveram o Markdown.
+        let markdown = source
+            .replace(/<\/p>\s*<p[^>]*>/gi, '\n\n')
+            .replace(/<br\s*\/?>/gi, '\n')
+            .replace(/<\/?p[^>]*>/gi, '');
+
+        // Converte entidades HTML, como &gt;, de volta ao texto.
+        const decoder = document.createElement('textarea');
+        decoder.innerHTML = markdown;
+        markdown = decoder.value;
+
+        html = window.marked.parse(markdown);
+    } else {
+        // Preserva a formatação HTML do editor visual.
+        html = source;
     }
+
+    if (window.DOMPurify) {
+        body.innerHTML = window.DOMPurify.sanitize(html, {
+            USE_PROFILES: { html: true }
+        });
+    } else {
+        body.textContent = source;
+        console.error('DOMPurify não carregou.');
+    }
+
+    article.append(body);
+}
 
     return article;
   }

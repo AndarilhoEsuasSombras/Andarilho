@@ -229,3 +229,43 @@ min-height: 0;
 .blog-post-card .blog-post-body img {
   margin: 1.2em auto !important;
 }
+
+
+.blog-post-body {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    line-height: 1.9;
+    color: #292929;
+    overflow-wrap: anywhere;
+}
+
+.blog-post-body p {
+    margin: 0 0 1.4em;
+}
+
+.blog-post-body h1,
+.blog-post-body h2,
+.blog-post-body h3 {
+    line-height: 1.4;
+    margin: 1.5em 0 0.7em;
+}
+
+.blog-post-body img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 2em auto;
+}
+
+.blog-post-body blockquote {
+    margin: 2em 0;
+    padding-left: 1.2em;
+    border-left: 3px solid var(--red);
+    font-style: italic;
+}
+
+.blog-post-body ul,
+.blog-post-body ol {
+    padding-left: 1.5em;
+    margin-bottom: 1.4em;
+}

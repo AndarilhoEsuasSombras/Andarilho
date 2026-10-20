@@ -55,7 +55,7 @@ content:
           rename: safe
 
       - name: kind
-        label: INCORPORAR VIDEO: [VIDEO](LINK) E REMOVER HIPERLINK
+        label: "INCORPORAR VIDEO: [VIDEO] (LINK) E REMOVER HIPERLINK"
         type: select
         options:
           values:

@@ -49,7 +49,7 @@
     "title": "teste",
     "date": "2026-10-20",
     "summary": "w34",
-    "body": "<h1>111111</h1><ul><li><p>123123</p></li></ul><ol><li><p>rudrut</p></li></ol><img src=\"/Andarilho/media/7aa78266-a213-4f4e-a381-bf274dd9036f.jpg\"><p>TEXTXO ENTER IMAGENS</p><img src=\"/Andarilho/media/sheen.gif\"><p>TEXTO ABAIXO DAS IMAGENS</p><h1>TITULO ABAIXO DAS IAMGENS</h1><p></p><p>[VIDEO](<a href=\"https://www.youtube.com/watch?v=UAZZ7eqqoIA\">https://www.youtube.com/watch?v=UAZZ7eqqoIA</a>)</p><p></p>",
+    "body": "<h1>111111</h1><ul><li><p>123123</p></li></ul><ol><li><p>rudrut</p></li></ol><img src=\"/Andarilho/media/7aa78266-a213-4f4e-a381-bf274dd9036f.jpg\"><p>TEXTXO ENTER IMAGENS</p><img src=\"/Andarilho/media/sheen.gif\"><p>TEXTO ABAIXO DAS IMAGENS</p><h1>TITULO ABAIXO DAS IAMGENS</h1><p></p><p>[VIDEO](https://www.youtube.com/watch?v=UAZZ7eqqoIA)</p><p></p>",
     "blog": "Filosofia",
     "published": true
   }

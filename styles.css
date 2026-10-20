@@ -229,3 +229,84 @@ min-height: 0;
 .blog-post-card .blog-post-body img {
   margin: 1.2em auto !important;
 }
+
+
+
+/* Arquivo de publicações da página Filosofia */
+.philosophy-archive {
+  width: 100%;
+  max-width: 900px;
+  margin: 32px auto;
+}
+
+.archive-controls {
+  margin-bottom: 24px;
+}
+
+.archive-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+.archive-select {
+  display: block;
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid var(--line, #ccc);
+  border-radius: 4px;
+  background: var(--paper, #fff);
+  color: var(--ink, #222);
+  font: inherit;
+  cursor: pointer;
+}
+
+.archive-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.archive-button {
+  padding: 9px 13px;
+  border: 1px solid var(--line, #ccc);
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.archive-button:hover:not(:disabled) {
+  background: var(--line, #eee);
+}
+
+.archive-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.archive-counter {
+  text-align: center;
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.archive-current-post {
+  min-width: 0;
+}
+
+@media (max-width: 480px) {
+  .archive-navigation {
+    flex-wrap: wrap;
+  }
+
+  .archive-counter {
+    order: -1;
+    width: 100%;
+  }
+}
+

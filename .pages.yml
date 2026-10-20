@@ -71,12 +71,10 @@ content:
         required: true
         options:
           values:
-            - reflexoes
-            - diario
-            - filosofia
-            - literatura
-            - poesia
-            - temas-diversos
+            - Filosofia
+            - Literatura
+            - Poesia
+            - Temas Diversos
 
       - name: published
         label: Publicar no site

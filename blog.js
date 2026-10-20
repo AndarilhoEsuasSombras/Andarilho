@@ -74,12 +74,17 @@ const visible = items.filter(item =>
       feed.replaceChildren();
 
 if (!visible.length) {
+  const mensagens = {
+    Filosofia: 'Ainda não há publicações em Filosofia.',
+    Literatura: 'Ainda não há publicações em Literatura.',
+    Poesia: 'Ainda não há publicações em Poesia.',
+    'temas-diversos': 'Ainda não há publicações em Temas Diversos.'
+  };
+
   feed.append(make(
     'div',
     'blog-empty',
-    blogMode === 'diario'
-      ? 'Ainda não há publicações no Diário Audiovisual.'
-      : 'Ainda não há publicações em Textos e Reflexões.'
+    mensagens[blogMode] || 'Ainda não há publicações nesta seção.'
   ));
   return;
 }

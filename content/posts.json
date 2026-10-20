@@ -57,7 +57,7 @@
     "title": "testando incorporar video no meio do texto",
     "date": "2026-10-20",
     "summary": "2134",
-    "body": "<p>aaaaaaaaaaaaaaaaaaaaaa</p><p></p><p>[VIDEO]https://www.youtube.com/watch?v=Krw1u6XD5Bg</p><p></p><p>aaaaaaaaaaaaaaaaa</p>",
+    "body": "<p>aaaaaaaaaaaaaaaaaaaaaa</p><p></p><p>[VIDEO](https://www.youtube.com/watch?v=Krw1u6XD5Bg)</p><p></p><p>aaaaaaaaaaaaaaaaa</p>",
     "blog": "Poesia",
     "published": true
   }

@@ -7,5 +7,32 @@
     "kind": "text",
     "blog": "Literatura",
     "published": true
+  },
+  {
+    "title": "FILOSOFIA",
+    "date": "2026-10-19",
+    "summary": "FILO",
+    "body": "SE TUDO TIVER CERTO, VAI APARECER EM FILOSOFIA",
+    "kind": "text",
+    "blog": "Filosofia",
+    "published": true
+  },
+  {
+    "title": "POESISA",
+    "date": "2026-10-19",
+    "summary": "POS",
+    "body": "SE TUDO TIVER CERTO, VAI APARECER EM POESIA",
+    "kind": "text",
+    "blog": "Poesia",
+    "published": true
+  },
+  {
+    "title": "TEMAS DIV",
+    "date": "2026-10-19",
+    "summary": "DIVERSOS",
+    "body": "SE TUDO TIVER CERTO VAI APAARECER EM TEMAS DIVERSSO",
+    "kind": "text",
+    "blog": "Temas Diversos",
+    "published": true
   }
 ]

@@ -181,3 +181,19 @@ min-height: 0;
   margin-top: 1em;
   margin-bottom: 0.4em;
 }
+
+.blog-video-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin: 1.5em auto;
+  overflow: hidden;
+}
+
+.blog-video-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}

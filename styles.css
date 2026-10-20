@@ -197,3 +197,25 @@ min-height: 0;
   height: 100%;
   border: 0;
 }
+
+ padding-block: 0 !important;
+}
+
+/* Evita espaços extras entre parágrafos consecutivos */
+.blog-post-card .blog-post-body p + p {
+  margin-top: 0 !important;
+}
+
+/* Mantém as citações compactas */
+.blog-post-card .blog-post-body blockquote {
+  margin-block: 0.5em !important;
+}
+
+.blog-post-card .blog-post-body blockquote p {
+  margin-bottom: 0.3em !important;
+}
+
+/* Não altera o espaçamento ao redor das imagens */
+.blog-post-card .blog-post-body img {
+  margin: 1.2em auto !important;
+}

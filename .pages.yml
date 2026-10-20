@@ -1,17 +1,7 @@
 
 media:
-  - name: images
-    label: Imagens das publicações
-    input: media/images
-    output: /Andarilho/media/images
-    extensions:
-      - jpg
-      - jpeg
-      - png
-      - webp
-    categories:
-      - image
-    rename: safe
+  input: media
+  output: /media
 
 content:
   - name: posts
@@ -35,21 +25,8 @@ content:
         type: string
 
       - name: body
-        label: Texto da publicação
+        label: Texto
         type: rich-text
-        options:
-          format: html
-          switcher: true
-          media: images
-          path: media/images
-          extensions:
-            - jpg
-            - jpeg
-            - png
-            - webp
-          categories:
-            - image
-          rename: safe
 
       - name: kind
         label: Tipo de publicação

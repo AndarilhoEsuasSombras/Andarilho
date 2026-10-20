@@ -27,3 +27,92 @@ padding: 22px 0;
 min-height: 0;
 }
 }
+
+
+/* Área das publicações */
+[data-blog-feed] {
+    max-width: 760px;
+    margin: 40px auto;
+}
+
+/* Cartão de cada publicação */
+.blog-post-card {
+    padding: 28px 0;
+    margin-bottom: 35px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Categoria e data */
+.blog-post-meta {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    font-size: 12px;
+    color: #777;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Título */
+.blog-post-title {
+    font-family: Georgia, serif;
+    font-size: 30px;
+    line-height: 1.3;
+    margin: 0 0 15px;
+    color: #222;
+}
+
+/* Resumo */
+.blog-post-summary {
+    font-size: 17px;
+    line-height: 1.7;
+    color: #555;
+}
+
+/* Texto completo */
+.blog-post-body {
+    font-size: 17px;
+    line-height: 1.9;
+    color: #333;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+/* Vídeos */
+.blog-video-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    margin: 25px 0;
+}
+
+.blog-video-frame iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+/* Mensagem quando não há publicações */
+.blog-empty {
+    padding: 25px 0;
+    color: #777;
+    font-style: italic;
+}
+
+/* Ajustes para celulares */
+@media (max-width: 600px) {
+    [data-blog-feed] {
+        margin: 25px 0;
+    }
+
+    .blog-post-title {
+        font-size: 25px;
+    }
+
+    .blog-post-body,
+    .blog-post-summary {
+        font-size: 16px;
+    }
+}
+

@@ -3,7 +3,7 @@ media:
   - name: images
     label: Imagens das publicações
     input: media/images
-    output: /Andarilho/media/images
+    output: /Andarilho/media
     extensions:
       - jpg
       - jpeg

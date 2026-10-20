@@ -158,3 +158,26 @@ min-height: 0;
 .blog-post-body li {
   margin-bottom: 0.25em;
 }
+
+/* Ajuste fino da tipografia das publicações */
+.blog-post-card .blog-post-body {
+  line-height: 1.5;
+}
+
+.blog-post-card .blog-post-body p {
+  margin-top: 0 !important;
+  margin-bottom: 0.45em !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.blog-post-card .blog-post-body p + p {
+  margin-top: 0 !important;
+}
+
+.blog-post-card .blog-post-body h1,
+.blog-post-card .blog-post-body h2,
+.blog-post-card .blog-post-body h3 {
+  margin-top: 1em;
+  margin-bottom: 0.4em;
+}

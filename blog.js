@@ -216,7 +216,7 @@ const video = createYouTubeVideo(match[1] || match[2]);
 
   
   // Arquivo de publicações exclusivo da página Filosofia.
-  function renderPhilosophyArchive(items) {
+function renderArchive(items) {
     const archive = make('section', 'philosophy-archive');
     const controls = make('div', 'archive-controls');
     const label = make('label', 'archive-label', 'Selecionar publicação');
@@ -398,16 +398,9 @@ const video = createYouTubeVideo(match[1] || match[2]);
       }
 
 
-      // Filosofia usa o novo sistema de arquivo.
-      if (currentBlog === 'filosofia') {
-        feed.append(renderPhilosophyArchive(visible));
-        return;
-      }
 
-      // As demais páginas continuam com o formato atual.
-      visible.forEach((item) => {
-        feed.append(renderItem(item));
-      });
+      // Todas as páginas usam o sistema de arquivo.
+      feed.append(renderArchive(visible));
 
     })
     .catch((error) => {

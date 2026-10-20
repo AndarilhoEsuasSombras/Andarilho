@@ -49,6 +49,7 @@ content:
             - jpeg
             - png
             - webp
+            - gif
           categories:
             - image
           rename: safe

@@ -1,0 +1,90 @@
+(function () {
+  const feed = document.querySelector('[data-blog-feed]');
+const blogMode = document.body.dataset.blogMode;
+  console.log("Blog selecionado:", blogMode);
+  if (!feed) return;
+
+  const escapeYouTubeId = (url) => {
+    try {
+      const parsed = new URL(url);
+      let id = '';
+      if (parsed.hostname.includes('youtu.be')) id = parsed.pathname.split('/').filter(Boolean)[0] || '';
+      else if (parsed.hostname.includes('youtube.com') || parsed.hostname.includes('youtube-nocookie.com')) {
+        id = parsed.searchParams.get('v') || (parsed.pathname.match(/\/(?:embed|shorts)\/([^/?]+)/) || [])[1] || '';
+      }
+      return /^[a-zA-Z0-9_-]{6,}$/.test(id) ? id : '';
+    } catch (_) { return ''; }
+  };
+
+  const make = (tag, className, text) => {
+    const el = document.createElement(tag);
+    if (className) el.className = className;
+    if (text !== undefined && text !== null) el.textContent = text;
+    return el;
+  };
+
+  const formatDate = (value) => {
+    if (!value) return '';
+    const d = new Date(value + (value.length === 10 ? 'T12:00:00' : ''));
+    return Number.isNaN(d.getTime()) ? value : new Intl.DateTimeFormat('pt-BR', {day:'2-digit', month:'long', year:'numeric'}).format(d);
+  };
+
+  function renderItem(item) {
+    const article = make('article', 'blog-post-card');
+    const meta = make('div', 'blog-post-meta');
+    meta.append(make('span', 'blog-post-category', item.category || (item.kind === 'video' ? 'Audiovisual' : ' ')));
+    if (item.date) meta.append(make('span', 'blog-post-date', formatDate(item.date)));
+    article.append(meta);
+    article.append(make('h2', 'blog-post-title', item.title || 'Sem título'));
+    if (item.summary) article.append(make('p', 'blog-post-summary', item.summary));
+
+    if (item.kind === 'video') {
+      const id = escapeYouTubeId(item.video_url || '');
+      if (id) {
+        const frameWrap = make('div', 'blog-video-frame');
+        const frame = document.createElement('iframe');
+        frame.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id);
+        frame.title = item.title || 'Vídeo de Andarilho e suas Sombras';
+        frame.loading = 'lazy';
+        frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        frame.referrerPolicy = 'strict-origin-when-cross-origin';
+        frame.allowFullscreen = true;
+        frameWrap.append(frame);
+        article.append(frameWrap);
+      } else {
+        const warning = make('p', 'blog-post-summary', 'O vídeo ainda não tem um link válido do YouTube.');
+        article.append(warning);
+      }
+    }
+
+    if (item.body) article.append(make('div', 'blog-post-body', item.body));
+    return article;
+  }
+
+  fetch('content/posts.json', { cache: 'no-store' })
+    .then((response) => { if (!response.ok) throw new Error('Não foi possível carregar as publicações.'); return response.json(); })
+    .then((items) => {
+      if (!Array.isArray(items)) throw new Error('O arquivo de publicações precisa conter uma lista.');
+const visible = items.filter(item =>
+  item &&
+  item.published === true &&
+  item.blog === blogMode
+);
+      visible.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+      feed.replaceChildren();
+
+if (!visible.length) {
+  feed.append(make(
+    'div',
+    'blog-empty',
+    blogMode === 'diario'
+      ? 'Ainda não há publicações no Diário Audiovisual.'
+      : 'Ainda não há publicações em Textos e Reflexões.'
+  ));
+  return;
+}
+
+      visible.forEach(item => feed.append(renderItem(item)));
+    })
+    .catch(() => feed.replaceChildren(make('div', 'blog-empty', 'Não foi possível carregar as publicações. Verifique se o arquivo content/posts.json existe e contém JSON válido.')));
+})();

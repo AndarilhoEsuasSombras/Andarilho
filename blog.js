@@ -76,9 +76,9 @@ const visible = items.filter(item =>
 if (!visible.length) {
   const mensagens = {
     Filosofia: 'Ainda não há publicações em Filosofia.',
-    literatura: 'Ainda não há publicações em Literatura.',
+    Literatura: 'Ainda não há publicações em Literatura.',
     Poesia: 'Ainda não há publicações em Poesia.',
-    'temas-diversos': 'Ainda não há publicações em Temas Diversos.'
+    'Temas Diversos': 'Ainda não há publicações em Temas Diversos.'
   };
 
   feed.append(make(

@@ -12,6 +12,7 @@ media:
       - gif
     categories:
       - image
+      - gif
     rename: safe
 
 content:

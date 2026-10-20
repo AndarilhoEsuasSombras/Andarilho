@@ -1,0 +1,57 @@
+
+media:
+  input: media
+  output: /media
+
+content:
+  - name: posts
+    label: Publicações do blog
+    type: file
+    path: content/posts.json
+    format: json
+    list: true
+    fields:
+      - name: title
+        label: Título
+        type: string
+        required: true
+
+      - name: date
+        label: Data
+        type: date
+
+      - name: summary
+        label: Resumo
+        type: string
+
+      - name: body
+        label: Texto
+        type: rich-text
+
+      - name: kind
+        label: Tipo de publicação
+        type: select
+        options:
+          values:
+            - text
+            - video
+
+      - name: video_url
+        label: Link do vídeo
+        type: string
+
+      - name: blog
+        label: Blog de destino
+        type: select
+        required: true
+        options:
+          values:
+            - Filosofia
+            - Literatura
+            - Poesia
+            - Temas Diversos
+            
+      - name: published
+        label: Publicar no site
+        type: boolean
+        default: true

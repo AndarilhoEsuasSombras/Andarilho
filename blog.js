@@ -55,7 +55,7 @@
         }).format(date);
   };
 
-  // Converte Markdown em HTML seguro.
+  // Converte um trecho de Markdown em elementos HTML seguros.
   function appendMarkdown(container, text) {
     if (!text.trim()) return;
 
@@ -65,7 +65,7 @@
 
     temporary.innerHTML = safeHTML;
 
-    // Corrige os caminhos das imagens no GitHub Pages.
+    // Corrige o caminho das imagens no GitHub Pages.
     temporary.querySelectorAll('img').forEach((img) => {
       const src = img.getAttribute('src');
 
@@ -77,7 +77,7 @@
     container.append(...temporary.childNodes);
   }
 
-  // Cria um vídeo do YouTube.
+  // Cria o vídeo diretamente no DOM, sem depender de HTML embutido.
   function createYouTubeVideo(url) {
     const id = escapeYouTubeId(url);
     if (!id) return null;
@@ -99,34 +99,7 @@
     return wrapper;
   }
 
-  // Extrai o ID do YouTube mesmo quando o Pages CMS altera a marcação.
-  function extractYouTubeIdFromMarker(line) {
-    let normalized = line;
-
-    // Decodifica endereços que foram codificados pelo editor.
-    for (let i = 0; i < 4; i++) {
-      try {
-        const decoded = decodeURIComponent(normalized);
-
-        if (decoded === normalized) break;
-
-        normalized = decoded;
-      } catch (_) {
-        break;
-      }
-    }
-
-    // Remove barras invertidas inseridas pelo editor Markdown.
-    normalized = normalized.replace(/\\/g, '');
-
-    const match = normalized.match(
-      /(?:youtube(?:-nocookie)?\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{6,})/i
-    );
-
-    return match ? match[1] : '';
-  }
-
-  // Formata o artigo e insere os vídeos entre os trechos de texto.
+  // Formata o artigo e insere cada vídeo entre os trechos de texto.
   function renderBody(source) {
     const body = make('div', 'blog-post-body');
 
@@ -136,40 +109,34 @@
       return body;
     }
 
-    // Aceita [VIDEO](URL) e a versão alterada pelo Pages CMS.
-    // A marcação precisa estar sozinha em uma linha.
-    const videoPattern = /^[ \t]*\[VIDEO\].*$/gm;
+    /*
+     * Reconhece [VIDEO](URL) em uma linha própria.
+     * Também aceita links comuns do YouTube e youtu.be.
+     */
+    const videoPattern =
+      /^[ \t]*\[VIDEO\]\((https?:\/\/[^\s)]+)\)[ \t]*$/gm;
 
     let lastIndex = 0;
     let match;
 
     while ((match = videoPattern.exec(source)) !== null) {
-      // Formata o texto anterior ao vídeo.
+      // Formata todo o texto anterior ao vídeo.
       appendMarkdown(body, source.slice(lastIndex, match.index));
 
-      const videoId = extractYouTubeIdFromMarker(match[0]);
+      // Insere o vídeo no lugar da marcação.
+      const video = createYouTubeVideo(match[1]);
 
-      if (videoId) {
-        const video = createYouTubeVideo(
-          'https://www.youtube.com/watch?v=' + videoId
-        );
-
-        if (video) {
-          body.append(video);
-        }
+      if (video) {
+        body.append(video);
       } else {
-        // Mantém a marcação visível se não for possível reconhecer o link.
+        // Mantém a marcação visível se o link não for reconhecido.
         appendMarkdown(body, match[0]);
-        console.warn(
-          'Não foi possível identificar o vídeo:',
-          match[0]
-        );
       }
 
       lastIndex = videoPattern.lastIndex;
     }
 
-    // Formata o conteúdo depois do último vídeo.
+    // Formata todo o conteúdo posterior ao último vídeo.
     appendMarkdown(body, source.slice(lastIndex));
 
     return body;
@@ -180,9 +147,7 @@
     const meta = make('div', 'blog-post-meta');
 
     if (item.blog) {
-      meta.append(
-        make('span', 'blog-post-category', item.blog)
-      );
+      meta.append(make('span', 'blog-post-category', item.blog));
     }
 
     if (item.date) {
@@ -192,7 +157,6 @@
     }
 
     article.append(meta);
-
     article.append(
       make('h2', 'blog-post-title', item.title || 'Sem título')
     );
@@ -242,9 +206,7 @@
     })
     .then((items) => {
       if (!Array.isArray(items)) {
-        throw new Error(
-          'O arquivo de publicações não contém uma lista.'
-        );
+        throw new Error('O arquivo de publicações não contém uma lista.');
       }
 
       const visible = items.filter(

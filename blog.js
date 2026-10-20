@@ -59,18 +59,22 @@ const blogMode = document.body.dataset.blogMode;
 
    if (item.body) {
   const body = make('div', 'blog-post-body');
-
-  // Aceita conteúdo textual salvo pelo Pages CMS.
   const source = String(item.body);
 
-  // Converte Markdown em HTML e sanitiza o resultado.
   const rendered = window.marked.parse(source);
   body.innerHTML = window.DOMPurify.sanitize(rendered);
 
+  // Corrige os caminhos das imagens no GitHub Pages.
+  body.querySelectorAll('img').forEach((img) => {
+    const src = img.getAttribute('src');
+
+    if (src && src.startsWith('/media/')) {
+      img.setAttribute('src', '/Andarilho' + src);
+    }
+  });
+
   article.append(body);
 }
-    return article;
-  }
 
   fetch('content/posts.json', { cache: 'no-store' })
     .then((response) => { if (!response.ok) throw new Error('Não foi possível carregar as publicações.'); return response.json(); })

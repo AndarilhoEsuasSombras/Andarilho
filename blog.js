@@ -224,14 +224,9 @@
 if (item.body) {
     const body = make('div', 'blog-post-body');
 
-    if (window.DOMPurify) {
-        body.innerHTML = window.DOMPurify.sanitize(item.body, {
-            USE_PROFILES: { html: true }
-        });
-    } else {
-        body.textContent = item.body;
-        console.error('DOMPurify não carregou.');
-    }
+    body.innerHTML = DOMPurify.sanitize(item.body, {
+        USE_PROFILES: { html: true }
+    });
 
     article.append(body);
 }

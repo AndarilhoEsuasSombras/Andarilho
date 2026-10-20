@@ -5,6 +5,8 @@
 
   if (!feed) return;
 
+  const BASE_PATH = '/Andarilho/';
+
   const make = (tag, className, text) => {
     const el = document.createElement(tag);
 
@@ -16,30 +18,39 @@
     return el;
   };
 
-  const escapeYouTubeId = (url) => {
+  // Identifica vídeos do YouTube e extrai o ID.
+  function escapeYouTubeId(url) {
     try {
       const parsed = new URL(url);
       let id = '';
 
-      if (parsed.hostname.includes('youtu.be')) {
+      if (
+        parsed.hostname === 'youtu.be' ||
+        parsed.hostname.endsWith('.youtu.be')
+      ) {
         id = parsed.pathname.split('/').filter(Boolean)[0] || '';
       } else if (
-        parsed.hostname.includes('youtube.com') ||
-        parsed.hostname.includes('youtube-nocookie.com')
+        parsed.hostname === 'youtube.com' ||
+        parsed.hostname.endsWith('.youtube.com') ||
+        parsed.hostname === 'youtube-nocookie.com' ||
+        parsed.hostname.endsWith('.youtube-nocookie.com')
       ) {
         id =
           parsed.searchParams.get('v') ||
-          (parsed.pathname.match(/\/(?:embed|shorts)\/([^/?]+)/) || [])[1] ||
+          (parsed.pathname.match(
+            /\/(?:embed|shorts)\/([^/?]+)/
+          ) || [])[1] ||
           '';
       }
 
-      return /^[a-zA-Z0-9_-]{6,}$/.test(id) ? id : '';
-    } catch (_) {
+      return /^[a-zA-Z0-9_-]{11}$/.test(id) ? id : '';
+    } catch (error) {
       return '';
     }
-  };
+  }
 
-  const formatDate = (value) => {
+  // Formata a data para português.
+  function formatDate(value) {
     if (!value) return '';
 
     const date = new Date(
@@ -53,9 +64,57 @@
           month: 'long',
           year: 'numeric'
         }).format(date);
-  };
+  }
 
-  // Converte um trecho de Markdown em elementos HTML seguros.
+  // Aceita nomes de seção com maiúsculas, espaços ou acentos.
+  function normalizeBlog(value) {
+    let name = String(value || '')
+      .trim()
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[_\s]+/g, '-');
+
+    const aliases = {
+      'diario-audiovisual': 'diario',
+      'temas-diversos': 'temas-diversos'
+    };
+
+    return aliases[name] || name;
+  }
+
+  // Corrige os caminhos das imagens do GitHub Pages.
+  function fixImagePaths(container) {
+    container.querySelectorAll('img').forEach((img) => {
+      const src = img.getAttribute('src');
+
+      if (src && src.startsWith('/media/')) {
+        img.setAttribute('src', BASE_PATH + src.slice(1));
+      }
+    });
+  }
+
+  // Converte entidades HTML, como &gt;, em caracteres normais.
+  function decodeEntities(value) {
+    const decoder = document.createElement('textarea');
+    decoder.innerHTML = value;
+    return decoder.value;
+  }
+
+  // Remove os parágrafos externos que podem envolver o Markdown
+  // quando o Pages CMS salva o conteúdo como HTML.
+  function normalizeSource(source) {
+    let text = String(source || '');
+
+    text = text
+      .replace(/<\/p>\s*<p(?:\s[^>]*)?>/gi, '\n\n')
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/<\/?p(?:\s[^>]*)?>/gi, '');
+
+    return decodeEntities(text).trim();
+  }
+
+  // Insere Markdown convertido e higienizado.
   function appendMarkdown(container, text) {
     if (!text.trim()) return;
 
@@ -64,22 +123,15 @@
     const temporary = document.createElement('div');
 
     temporary.innerHTML = safeHTML;
-
-    // Corrige o caminho das imagens no GitHub Pages.
-    temporary.querySelectorAll('img').forEach((img) => {
-      const src = img.getAttribute('src');
-
-      if (src && src.startsWith('/media/')) {
-        img.setAttribute('src', '/Andarilho' + src);
-      }
-    });
+    fixImagePaths(temporary);
 
     container.append(...temporary.childNodes);
   }
 
-  // Cria o vídeo diretamente no DOM, sem depender de HTML embutido.
+  // Cria um vídeo incorporado sem inserir HTML de iframe vindo do texto.
   function createYouTubeVideo(url) {
     const id = escapeYouTubeId(url);
+
     if (!id) return null;
 
     const wrapper = make('div', 'blog-video-frame');
@@ -88,6 +140,7 @@
     iframe.src =
       'https://www.youtube-nocookie.com/embed/' +
       encodeURIComponent(id);
+
     iframe.title = 'Vídeo do YouTube';
     iframe.loading = 'lazy';
     iframe.allow =
@@ -96,12 +149,14 @@
     iframe.allowFullscreen = true;
 
     wrapper.append(iframe);
+
     return wrapper;
   }
 
-  // Formata o artigo e insere cada vídeo entre os trechos de texto.
-  function renderBody(source) {
+  // Converte o texto da publicação, incluindo vídeos no meio do conteúdo.
+  function renderBody(originalSource) {
     const body = make('div', 'blog-post-body');
+    const source = normalizeSource(originalSource);
 
     if (!window.marked || !window.DOMPurify) {
       console.error('Marked ou DOMPurify não carregou.');
@@ -109,46 +164,67 @@
       return body;
     }
 
-    /*
-     * Reconhece [VIDEO](URL) em uma linha própria.
-     * Também aceita links comuns do YouTube e youtu.be.
-     */
+    const hasMarkdown =
+      /!\[[^\]]*\]\([^)]+\)/.test(source) ||
+      /\[VIDEO\]\(/i.test(source) ||
+      /^\s*&gt;\s?/mi.test(String(originalSource)) ||
+      /^\s*>+\s?/m.test(source) ||
+      /\*\*[^*]+\*\*/.test(source) ||
+      /(^|[^*])\*[^*\n]+\*/.test(source) ||
+      /^\s*#{1,6}\s+/m.test(source) ||
+      /^\s*[-*+]\s+/m.test(source);
+
+    // Se for HTML puro do editor visual, preserva sua estrutura.
+    if (!hasMarkdown && /<\/?[a-z][\s\S]*>/i.test(source)) {
+      body.innerHTML = window.DOMPurify.sanitize(source);
+      fixImagePaths(body);
+      return body;
+    }
+
+    // Reconhece [VIDEO](URL), mesmo que o editor tenha
+    // colocado a marcação no meio de um parágrafo.
     const videoPattern =
-      /^[ \t]*\[VIDEO\]\((https?:\/\/[^\s)]+)\)[ \t]*$/gm;
+      /\[VIDEO\]\((https?:\/\/[^\s)]+)\)/gi;
 
     let lastIndex = 0;
     let match;
 
     while ((match = videoPattern.exec(source)) !== null) {
-      // Formata todo o texto anterior ao vídeo.
-      appendMarkdown(body, source.slice(lastIndex, match.index));
+      // Formata o texto que aparece antes do vídeo.
+      appendMarkdown(
+        body,
+        source.slice(lastIndex, match.index)
+      );
 
-      // Insere o vídeo no lugar da marcação.
       const video = createYouTubeVideo(match[1]);
 
       if (video) {
         body.append(video);
       } else {
-        // Mantém a marcação visível se o link não for reconhecido.
         appendMarkdown(body, match[0]);
       }
 
       lastIndex = videoPattern.lastIndex;
     }
 
-    // Formata todo o conteúdo posterior ao último vídeo.
+    // Formata o restante do texto após o último vídeo.
     appendMarkdown(body, source.slice(lastIndex));
 
     return body;
   }
 
+  // Monta cada publicação.
   function renderItem(item) {
     const article = make('article', 'blog-post-card');
     const meta = make('div', 'blog-post-meta');
 
-    if (item.blog) {
-      meta.append(make('span', 'blog-post-category', item.blog));
-    }
+    meta.append(
+      make(
+        'span',
+        'blog-post-category',
+        item.category || item.blog || ''
+      )
+    );
 
     if (item.date) {
       meta.append(
@@ -157,6 +233,7 @@
     }
 
     article.append(meta);
+
     article.append(
       make('h2', 'blog-post-title', item.title || 'Sem título')
     );
@@ -167,7 +244,7 @@
       );
     }
 
-    // Mantém o suporte às publicações exclusivamente em vídeo.
+    // Publicação exclusivamente em vídeo.
     if (item.kind === 'video') {
       const video = createYouTubeVideo(item.video_url || '');
 
@@ -184,51 +261,10 @@
       }
     }
 
-    // Publicações de texto com imagens, citações e vídeos incorporados.
-
-if (item.body) {
-    const body = make('div', 'blog-post-body');
-    const source = String(item.body);
-
-    // Detecta Markdown dentro do HTML gerado pelo editor.
-    const hasMarkdown =
-        /!\[[^\]]*\]\([^)]+\)/.test(source) ||
-        /\[VIDEO\]\(/i.test(source) ||
-        /^\s*&gt;\s?/mi.test(source) ||
-        /^\s*>+\s?/m.test(source) ||
-        /\*\*[^*]+\*\*/.test(source);
-
-    let html;
-
-    if (hasMarkdown) {
-        // Remove os parágrafos externos que envolveram o Markdown.
-        let markdown = source
-            .replace(/<\/p>\s*<p[^>]*>/gi, '\n\n')
-            .replace(/<br\s*\/?>/gi, '\n')
-            .replace(/<\/?p[^>]*>/gi, '');
-
-        // Converte entidades HTML, como &gt;, de volta ao texto.
-        const decoder = document.createElement('textarea');
-        decoder.innerHTML = markdown;
-        markdown = decoder.value;
-
-        html = window.marked.parse(markdown);
-    } else {
-        // Preserva a formatação HTML do editor visual.
-        html = source;
+    // Texto em Markdown ou HTML, com imagens e vídeos incorporados.
+    if (item.body) {
+      article.append(renderBody(item.body));
     }
-
-    if (window.DOMPurify) {
-        body.innerHTML = window.DOMPurify.sanitize(html, {
-            USE_PROFILES: { html: true }
-        });
-    } else {
-        body.textContent = source;
-        console.error('DOMPurify não carregou.');
-    }
-
-    article.append(body);
-}
 
     return article;
   }
@@ -237,7 +273,9 @@ if (item.body) {
     make('p', 'note', 'Carregando publicações...')
   );
 
-  fetch('/Andarilho/content/posts.json', { cache: 'no-store' })
+  fetch(BASE_PATH + 'content/posts.json', {
+    cache: 'no-store'
+  })
     .then((response) => {
       if (!response.ok) {
         throw new Error('Erro HTTP ' + response.status);
@@ -247,15 +285,20 @@ if (item.body) {
     })
     .then((items) => {
       if (!Array.isArray(items)) {
-        throw new Error('O arquivo de publicações não contém uma lista.');
+        throw new Error(
+          'O arquivo de publicações não contém uma lista.'
+        );
       }
 
-      const visible = items.filter(
-        (item) =>
+      const currentBlog = normalizeBlog(blogMode);
+
+      const visible = items.filter((item) => {
+        return (
           item &&
           item.published === true &&
-          item.blog === blogMode
-      );
+          normalizeBlog(item.blog) === currentBlog
+        );
+      });
 
       visible.sort((a, b) =>
         String(b.date || '').localeCompare(String(a.date || ''))
@@ -265,10 +308,12 @@ if (item.body) {
 
       if (!visible.length) {
         const messages = {
-          Filosofia: 'Ainda não há publicações em Filosofia.',
-          Literatura: 'Ainda não há publicações em Literatura.',
-          Poesia: 'Ainda não há publicações em Poesia.',
-          'Temas Diversos':
+          reflexoes: 'Ainda não há publicações em Reflexões.',
+          diario: 'Ainda não há publicações no Diário Audiovisual.',
+          filosofia: 'Ainda não há publicações em Filosofia.',
+          literatura: 'Ainda não há publicações em Literatura.',
+          poesia: 'Ainda não há publicações em Poesia.',
+          'temas-diversos':
             'Ainda não há publicações em Temas Diversos.'
         };
 
@@ -276,7 +321,7 @@ if (item.body) {
           make(
             'div',
             'blog-empty',
-            messages[blogMode] ||
+            messages[currentBlog] ||
               'Ainda não há publicações nesta seção.'
           )
         );
@@ -295,7 +340,7 @@ if (item.body) {
         make(
           'div',
           'blog-empty',
-          'Não foi possível carregar as publicações. Verifique o Console do navegador.'
+          'Não foi possível carregar as publicações. Verifique o arquivo content/posts.json e o Console do navegador.'
         )
       );
     });

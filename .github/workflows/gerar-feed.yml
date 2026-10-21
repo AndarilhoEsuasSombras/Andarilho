@@ -1,0 +1,36 @@
+
+name: Atualizar feed RSS
+
+on:
+  push:
+    paths:
+      - "content/posts.json"
+      - ".github/workflows/gerar-feed.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  gerar-feed:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Gerar feed RSS
+        run: python scripts/gerar_feed.py
+
+      - name: Salvar feed atualizado
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add feed.xml
+          git diff --cached --quiet || git commit -m "Atualiza feed RSS"
+          git push

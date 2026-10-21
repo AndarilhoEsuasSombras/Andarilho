@@ -367,3 +367,55 @@ min-height: 0;
     flex-shrink: 0;
   }
 }
+
+
+
+/* Último texto publicado na página inicial */
+.latest-publication {
+  padding: 10px 0 25px;
+}
+
+.latest-publication .section-head {
+  padding-top: 30px;
+}
+
+.latest-post-card {
+  padding: 28px 0 35px;
+  border-bottom: 1px solid var(--line);
+}
+
+.latest-post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  margin-bottom: 15px;
+  color: var(--red);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.latest-post-card h3 {
+  max-width: 850px;
+  margin: 0 0 15px;
+  font: 700 clamp(1.8rem, 4vw, 3rem)/1.12 var(--serif);
+  letter-spacing: -0.035em;
+}
+
+.latest-post-card .latest-summary {
+  max-width: 760px;
+  margin: 0 0 20px;
+  color: var(--muted);
+  font: 1.1rem/1.7 var(--serif);
+}
+
+.latest-post-card .text-link {
+  margin-top: 0;
+}
+
+.latest-post-error {
+  padding: 20px 0;
+  color: var(--muted);
+  font-family: var(--serif);
+}

@@ -2,7 +2,8 @@
 (function () {
   const feed = document.querySelector('[data-blog-feed]');
   const blogMode = document.body.dataset.blogMode;
-
+carregarUltimoTexto();
+  
   if (!feed) return;
 
   const BASE_PATH = '/Andarilho/';
@@ -509,6 +510,6 @@ async function carregarUltimoTexto() {
   }
 }
 
-carregarUltimoTexto();
+
 
 })();

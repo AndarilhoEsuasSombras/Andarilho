@@ -419,3 +419,73 @@ min-height: 0;
   color: var(--muted);
   font-family: var(--serif);
 }
+
+/* Prévia dos livros publicados */
+.published-books {
+  padding: 20px 0 45px;
+}
+
+.published-books .section-head {
+  margin-bottom: 24px;
+}
+
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.book-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 20px;
+}
+
+.book-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: contain;
+  background: var(--paper);
+  margin-bottom: 16px;
+}
+
+.book-card h3 {
+  margin: 0 0 10px;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  line-height: 1.35;
+}
+
+.book-price {
+  margin: auto 0 12px;
+  padding-top: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.book-link {
+  color: var(--red);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.book-card:hover h3 {
+  color: var(--red);
+}
+
+@media (max-width: 700px) {
+  .books-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 14px;
+  }
+
+  .book-card h3 {
+    font-size: 1rem;
+  }
+}
+

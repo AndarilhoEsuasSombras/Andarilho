@@ -489,3 +489,18 @@ min-height: 0;
   }
 }
 
+/* Mantém o rodapé no fundo da tela */
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+body > .wrap {
+    flex: 1;
+}

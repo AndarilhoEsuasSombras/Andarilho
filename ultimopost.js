@@ -93,7 +93,7 @@
       )
     );
 
-    const link = criar("a", "text-link", "Ver publicações da seção ↗");
+    const link = criar("a", "text-link", "Ler publicação ↗");
     link.href = BASE_PATH + (
       categorias[normalizar(tema)] || "index.html"
     );

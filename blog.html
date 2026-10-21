@@ -1,0 +1,54 @@
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blog — Caderno de Ideias</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-blog-mode="Blog">
+
+<div class="topline"></div>
+
+<div class="wrap">
+  <header class="masthead">
+    <a href="index.html" class="brand">
+      <h1>Caderno de Ideias</h1>
+    </a>
+    <p>Andarilho e suas Sombras</p>
+  </header>
+
+  <nav class="nav">
+    <div class="nav-track">
+      <a href="index.html">Início</a>
+      <a href="filosofia.html">Filosofia</a>
+      <a href="literatura.html">Literatura</a>
+      <a href="poesia.html">Poesia</a>
+      <a href="temas-diversos.html">Temas diversos</a>
+      <a href="reflexoes.html">Reflexões</a>
+      <a href="blog.html" aria-current="page">Blog</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="section-head">
+      <h2>Blog</h2>
+      <span>Textos e pensamentos</span>
+    </section>
+
+    <div data-blog-feed>
+      <p class="note">Carregando publicações...</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>Caderno de Ideias — Maurício Possa Lopes</p>
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
+<script src="blog.js"></script>
+</body>
+</html>

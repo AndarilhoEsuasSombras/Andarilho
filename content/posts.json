@@ -305,8 +305,16 @@
     "title": "A vitimização de Anne Frank e a menina da Bienal que leu Nietzsche",
     "date": "2026-10-21",
     "summary": "quando se trata de Nietzsche, todo mundo quer ir para o céu (mas ninguém quer morrer)",
-    "body": "<p>Segue abaixo a leitura completa do artigo em PDF:</p>\n\n<iframe src=\"https://docs.google.com/gview?url=https://raw.githubusercontent.com/AndarilhoEsuasSombras/Andarilho/main/artigo-anne-frank-nietzsche.pdf&embedded=true\" width=\"100%\" height=\"600px\" style=\"border: none;\"></iframe>\n\n<p>Fim do documento.</p>",
+    "body": "<p>Segue abaixo a leitura completa do artigo em PDF:</p><p>Fim do documento.</p>",
     "blog": "Filosofia",
+    "published": true
+  },
+  {
+    "title": "primeiro blog",
+    "date": "2026-10-21",
+    "summary": "primaaeiro blog",
+    "body": "<p>aaaaaaa</p>",
+    "blog": "Blog",
     "published": true
   }
 ]

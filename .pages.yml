@@ -76,6 +76,7 @@ content:
             - Literatura
             - Poesia
             - Temas Diversos
+            - Blog
 
       - name: published
         label: Publicar no site

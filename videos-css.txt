@@ -1,0 +1,22 @@
+/* Complemento para a página Vídeos: cole no final de styles.css */
+.video-archive {
+  max-width: 900px;
+}
+.video-archive-card .blog-post-title {
+  margin-bottom: 18px;
+}
+.video-archive-card .text-link {
+  margin-top: 8px;
+}
+.video-archive .archive-select {
+  max-width: 100%;
+}
+@media (max-width: 600px) {
+  .video-archive .archive-navigation {
+    gap: 8px;
+  }
+  .video-archive .archive-button {
+    padding: 9px 10px;
+    font-size: 0.85rem;
+  }
+}

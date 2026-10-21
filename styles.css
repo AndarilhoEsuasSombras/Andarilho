@@ -311,7 +311,8 @@ min-height: 0;
 }
 
 
-/* Menu horizontal deslizante */
+
+/* Menu original com rolagem horizontal */
 .nav {
   display: block;
   width: 100%;
@@ -319,62 +320,50 @@ min-height: 0;
   min-width: 0;
   overflow-x: auto;
   overflow-y: hidden;
-  margin: 20px 0;
-  padding: 0 0 8px;
+  white-space: nowrap;
   box-sizing: border-box;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: var(--line, #ccc) transparent;
+  scrollbar-width: none;
+}
+
+.nav::-webkit-scrollbar {
+  display: none;
 }
 
 .nav-track {
   display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
+  flex-flow: row nowrap;
   justify-content: flex-start;
-  gap: 10px;
+  align-items: stretch;
   width: max-content;
   min-width: 100%;
-}
-
-.nav-track a {
-  display: inline-flex;
-  flex: 0 0 auto;
-  align-items: center;
-  justify-content: center;
   white-space: nowrap;
-  padding: 10px 16px;
-  border: 1px solid var(--line, #ccc);
-  border-radius: 5px;
-  text-decoration: none;
-  color: inherit;
-  transition: background-color 0.2s ease,
-              border-color 0.2s ease;
 }
 
-.nav-track a:hover {
-  background: var(--line, #eee);
+/* Preserva o estilo original dos links */
+.nav-track a {
+  display: inline-block;
+  flex: 0 0 auto;
+  float: none;
+  white-space: nowrap;
 }
 
-.nav-track a:focus-visible {
-  outline: 2px solid var(--red, #a22);
-  outline-offset: 3px;
-}
-
-/* Ajustes para telas pequenas */
+/* Celular: mantém todos os botões em uma única linha */
 @media (max-width: 600px) {
   .nav {
-    margin: 14px 0;
-    padding-bottom: 6px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    touch-action: pan-x;
   }
 
   .nav-track {
-    gap: 8px;
+    flex-wrap: nowrap;
+    width: max-content;
+    min-width: 100%;
   }
 
   .nav-track a {
-    padding: 9px 13px;
-    font-size: 0.9rem;
+    flex-shrink: 0;
   }
 }
-

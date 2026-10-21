@@ -4,9 +4,7 @@
   const blogMode = document.body.dataset.blogMode;
   
 
-if (!feed) {
-  carregarUltimoTexto();
-  return;
+if (!feed) return;
 }
 
   const BASE_PATH = '/Andarilho/';
@@ -412,107 +410,4 @@ function renderArchive(items) {
         )
       );
     });
-  
-/* Último texto publicado na página inicial */
-async function carregarUltimoTexto() {
-  const container = document.getElementById("latest-post");
-  if (!container) return;
-
-  const categorias = {
-    "filosofia": "filosofia.html",
-    "literatura": "literatura.html",
-    "poesia": "poesia.html",
-    "temas diversos": "temas-diversos.html",
-    "reflexões": "reflexoes.html",
-    "diário audiovisual": "diario-audiovisual.html"
-  };
-
-  const normalizar = texto =>
-    String(texto || "")
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .trim()
-      .toLowerCase();
-
-  const criar = (tag, classe, texto) => {
-    const el = document.createElement(tag);
-    if (classe) el.className = classe;
-    if (texto != null) el.textContent = texto;
-    return el;
-  };
-
-  try {
-    const resposta = await fetch("content/posts.json");
-
-    if (!resposta.ok) {
-      throw new Error("Erro ao carregar posts.json");
-    }
-
-    const posts = await resposta.json();
-
-    const textos = posts
-      .filter(post =>
-        post.published !== false &&
-        post.title &&
-        post.date &&
-        post.kind !== "video"
-      )
-      .sort((a, b) =>
-        new Date(b.date).getTime() - new Date(a.date).getTime()
-      );
-
-    if (!textos.length) {
-      container.replaceChildren(
-        criar("p", "latest-post-error",
-          "Nenhum texto publicado foi encontrado.")
-      );
-      return;
-    }
-
-    const post = textos[0];
-    const tema = post.blog || "Temas diversos";
-    const destino = categorias[normalizar(tema)] || "index.html";
-
-    const cartao = criar("article", "latest-post-card");
-    const meta = criar("div", "latest-post-meta");
-
-    const data = new Date(post.date + "T12:00:00")
-      .toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric"
-      });
-
-    meta.append(
-      criar("span", "", data),
-      criar("span", "", tema)
-    );
-
-    const titulo = criar("h3", "", post.title);
-
-    const resumo = criar(
-      "p",
-      "latest-summary",
-      post.summary ||
-        "Leia a publicação mais recente do Caderno de Ideias."
-    );
-
-    const link = criar("a", "text-link", "Ler texto completo ↗");
-    link.href = destino;
-
-    cartao.append(meta, titulo, resumo, link);
-    container.replaceChildren(cartao);
-
-  } catch (erro) {
-    console.error("Erro ao carregar o último texto:", erro);
-
-    container.replaceChildren(
-      criar("p", "latest-post-error",
-        "Não foi possível carregar a publicação mais recente.")
-    );
-  }
-}
-
-
-
 })();

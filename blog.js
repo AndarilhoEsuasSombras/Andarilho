@@ -101,16 +101,10 @@
     return decoder.value;
   }
 
-  // Remove os parágrafos externos que podem envolver o Markdown
-  // quando o Pages CMS salva o conteúdo como HTML.
+  // Preserva a estrutura HTML criada pelo PagesCMS.
+  // Isso mantém os parágrafos, imagens e citações.
   function normalizeSource(source) {
     let text = String(source || '');
-
-    text = text
-      .replace(/<\/p>\s*<p(?:\s[^>]*)?>/gi, '\n\n')
-      .replace(/<br\s*\/?>/gi, '\n')
-      .replace(/<\/?p(?:\s[^>]*)?>/gi, '');
-
     return decodeEntities(text).trim();
   }
 

@@ -1,0 +1,95 @@
+media:
+  - name: images
+    label: Imagens das publicações
+    input: media
+    output: /Andarilho/media
+    extensions:
+      - jpg
+      - jpeg
+      - png
+      - webp
+      - gif
+    categories:
+      - image
+      - gif
+    rename: safe
+
+    
+content:
+  - name: posts
+    label: Publicações do blog
+    type: collection
+    path: content/posts
+    filename: "{primary}.json"
+    format: json
+
+    view:
+      primary: title
+      fields:
+        - title
+        - date
+        - blog
+        - published
+      sort: date
+      order: desc
+
+    fields:
+      - name: title
+        label: Título
+        type: string
+        required: true
+
+      - name: date
+        label: Data
+        type: date
+
+      - name: summary
+        label: Resumo
+        type: string
+
+      - name: body
+        label: Texto da publicação
+        type: rich-text
+        options:
+          format: html
+          switcher: true
+          media: images
+          path: media/images
+          extensions:
+            - jpg
+            - jpeg
+            - png
+            - webp
+            - gif
+          categories:
+            - image
+          rename: safe
+
+      - name: kind
+        label: Tipo de publicação
+        type: select
+        options:
+          values:
+            - text
+            - video
+
+      - name: video_url
+        label: Link do vídeo
+        type: string
+
+      - name: blog
+        label: Blog de destino
+        type: select
+        required: true
+        options:
+          values:
+            - Filosofia
+            - Literatura
+            - Poesia
+            - Temas Diversos
+            - Blog
+
+      - name: published
+        label: Publicar no site
+        type: boolean
+        default: true

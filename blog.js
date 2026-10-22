@@ -515,18 +515,19 @@ function renderArchive(items) {
   })();
 
   
+
 /* Último texto publicado na página inicial */
 async function carregarUltimoTexto() {
   const container = document.getElementById("latest-post");
   if (!container) return;
+
+  const BASE = "/Andarilho/";
 
   const categorias = {
     "filosofia": "filosofia.html",
     "literatura": "literatura.html",
     "poesia": "poesia.html",
     "temas diversos": "temas-diversos.html",
-    "reflexões": "reflexoes.html",
-    "diário audiovisual": "diario-audiovisual.html"
   };
 
   const normalizar = texto =>
@@ -544,15 +545,104 @@ async function carregarUltimoTexto() {
   };
 
   try {
-    const resposta = await fetch("content/posts.json");
+    // 1. Carrega as publicações antigas.
+    const resposta = await fetch(
+      BASE + "content/posts.json",
+      { cache: "no-store" }
+    );
 
     if (!resposta.ok) {
       throw new Error("Erro ao carregar posts.json");
     }
 
-    const posts = await resposta.json();
+    const antigas = await resposta.json();
 
-    const textos = posts
+    if (!Array.isArray(antigas)) {
+      throw new Error("posts.json precisa conter uma lista.");
+    }
+
+    // 2. Lê a lista automática de arquivos individuais.
+    let nomes = [];
+
+    try {
+      const respostaIndice = await fetch(
+        BASE + "content/posts-index.json",
+        { cache: "no-store" }
+      );
+
+      if (respostaIndice.ok) {
+        nomes = await respostaIndice.json();
+
+        if (!Array.isArray(nomes)) {
+          throw new Error("O índice não contém uma lista.");
+        }
+      }
+    } catch (erro) {
+      console.warn("Não foi possível carregar o índice:", erro);
+    }
+
+    // 3. Carrega as publicações individuais.
+    const resultados = await Promise.all(
+      nomes.map(async nome => {
+        try {
+          nome = String(nome || "").trim();
+
+          if (
+            !nome ||
+            nome.includes("/") ||
+            nome.includes("\\") ||
+            !nome.toLowerCase().endsWith(".json")
+          ) {
+            return null;
+          }
+
+          const respostaPost = await fetch(
+            BASE + "content/posts/" + encodeURIComponent(nome),
+            { cache: "no-store" }
+          );
+
+          if (!respostaPost.ok) {
+            throw new Error("Erro ao carregar " + nome);
+          }
+
+          const post = await respostaPost.json();
+
+          if (
+            !post ||
+            typeof post !== "object" ||
+            Array.isArray(post)
+          ) {
+            return null;
+          }
+
+          return post;
+        } catch (erro) {
+          console.error("Erro ao carregar publicação:", erro);
+          return null;
+        }
+      })
+    );
+
+    const individuais = resultados.filter(Boolean);
+
+    // 4. Combina as fontes, evitando publicações duplicadas.
+    const mapa = new Map();
+
+    [...antigas, ...individuais].forEach(post => {
+      if (!post || typeof post !== "object") return;
+
+      const chave = [
+        normalizar(post.title),
+        String(post.date || "").trim(),
+        normalizar(post.blog)
+      ].join("|");
+
+      // Se houver duplicação, o arquivo individual prevalece.
+      mapa.set(chave, post);
+    });
+
+    // 5. Seleciona os textos publicados.
+    const textos = [...mapa.values()]
       .filter(post =>
         post.published !== false &&
         post.title &&
@@ -560,17 +650,21 @@ async function carregarUltimoTexto() {
         post.kind !== "video"
       )
       .sort((a, b) =>
-        new Date(b.date).getTime() - new Date(a.date).getTime()
+        String(b.date).localeCompare(String(a.date))
       );
 
     if (!textos.length) {
       container.replaceChildren(
-        criar("p", "latest-post-error",
-          "Nenhum texto publicado foi encontrado.")
+        criar(
+          "p",
+          "latest-post-error",
+          "Nenhum texto publicado foi encontrado."
+        )
       );
       return;
     }
 
+    // 6. Exibe a publicação mais recente.
     const post = textos[0];
     const tema = post.blog || "Temas diversos";
     const destino = categorias[normalizar(tema)] || "index.html";
@@ -600,7 +694,7 @@ async function carregarUltimoTexto() {
     );
 
     const link = criar("a", "text-link", "Ler texto completo ↗");
-    link.href = destino;
+    link.href = BASE + destino;
 
     cartao.append(meta, titulo, resumo, link);
     container.replaceChildren(cartao);
@@ -609,11 +703,15 @@ async function carregarUltimoTexto() {
     console.error("Erro ao carregar o último texto:", erro);
 
     container.replaceChildren(
-      criar("p", "latest-post-error",
-        "Não foi possível carregar a publicação mais recente.")
+      criar(
+        "p",
+        "latest-post-error",
+        "Não foi possível carregar a publicação mais recente."
+      )
     );
   }
 }
+
 
 carregarUltimoTexto();
 

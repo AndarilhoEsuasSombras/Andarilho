@@ -5,7 +5,15 @@
   if (!feed) return;
 
   const BASE_PATH = '/Andarilho/';
-
+  
+function getPostKey(item) {
+  return [
+    String(item.title || '').trim().toLowerCase(),
+    String(item.date || '').trim(),
+    normalizeBlog(item.blog)
+  ].join('|');
+}
+  
   const make = (tag, className, text) => {
     const el = document.createElement(tag);
 
@@ -307,9 +315,28 @@ function renderArchive(items) {
     navigation.append(previous, counter, next);
     archive.append(controls, navigation, postContainer);
 
-    showPost(0);
 
-    return archive;
+  const postSolicitado = new URLSearchParams(
+    window.location.hash.slice(1)
+  ).get('post');
+
+  const indiceSolicitado = postSolicitado
+    ? items.findIndex(item => getPostKey(item) === postSolicitado)
+    : -1;
+
+  showPost(indiceSolicitado >= 0 ? indiceSolicitado : 0);
+
+  if (indiceSolicitado >= 0) {
+    requestAnimationFrame(() => {
+      archive.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    });
+  }
+
+  return archive;
+
   }
 
   

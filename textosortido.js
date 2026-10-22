@@ -67,8 +67,27 @@
     const cartao = criar('article', 'random-post-card');
 
     cartao.append(
-      criar('span', 'random-post-category', categoriaOriginal)
-    );
+
+const dataFormatada = post.date
+  ? new Date(post.date + 'T12:00:00').toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric'
+    })
+  : '';
+
+const meta = criar('div', 'random-post-meta');
+
+if (dataFormatada) {
+  meta.append(criar('span', '', dataFormatada));
+}
+
+meta.append(
+  criar('span', '', categoriaOriginal)
+);
+
+cartao.append(meta);
+
 
     cartao.append(
       criar('h3', 'random-post-title', post.title || 'Sem título')
@@ -78,7 +97,7 @@
       criar('p', 'random-post-summary', extrairTrecho(post))
     );
 
-    const link = criar('a', 'text-link', 'Ler texto completo ↗');
+    const link = criar('a', 'text-link', 'Ler publicação ↗');
 link.href =
   BASE + destino +
   '#post=' + encodeURIComponent(

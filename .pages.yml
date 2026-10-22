@@ -7,7 +7,7 @@ content:
     label: "Publicações"
     type: "collection"
     path: "content/posts"
-    extension: "json"
+    extension: "md"
     filename: "{year}-{month}-{day}-{slug}"
     fields:
       - name: "title"

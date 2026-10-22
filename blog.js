@@ -330,59 +330,167 @@ function renderArchive(items) {
     return article;
   }
 
+
+  // Carrega as publicações antigas e as novas publicações individuais.
   feed.replaceChildren(
     make('p', 'note', 'Carregando publicações...')
   );
 
-  fetch(BASE_PATH + 'content/posts.json', {
-    cache: 'no-store'
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Erro HTTP ' + response.status);
+  (async function carregarPublicacoes() {
+    try {
+      // 1. Carrega o arquivo antigo, que continua existindo.
+      const respostaAntigas = await fetch(
+        BASE_PATH + 'content/posts.json',
+        { cache: 'no-store' }
+      );
+
+      if (!respostaAntigas.ok) {
+        throw new Error('Não foi possível carregar content/posts.json');
       }
 
-      return response.json();
-    })
-    .then((items) => {
-      if (!Array.isArray(items)) {
-        throw new Error(
-          'O arquivo de publicações não contém uma lista.'
+      const antigas = await respostaAntigas.json();
+
+      if (!Array.isArray(antigas)) {
+        throw new Error('content/posts.json precisa conter uma lista.');
+      }
+
+      // 2. Lê a lista dos arquivos individuais.
+      let nomesArquivos = [];
+
+      try {
+        const respostaIndice = await fetch(
+          BASE_PATH + 'content/posts-index.json',
+          { cache: 'no-store' }
         );
+
+        if (respostaIndice.ok) {
+          nomesArquivos = await respostaIndice.json();
+
+          if (!Array.isArray(nomesArquivos)) {
+            throw new Error(
+              'posts-index.json precisa conter uma lista de nomes.'
+            );
+          }
+        } else {
+          console.warn(
+            'posts-index.json não encontrado. Carregando apenas os posts antigos.'
+          );
+        }
+      } catch (erroIndice) {
+        console.warn('Não foi possível ler o índice:', erroIndice);
       }
 
+      // 3. Carrega cada publicação individual.
+      const resultados = await Promise.all(
+        nomesArquivos.map(async (nomeArquivo) => {
+          try {
+            const nomeSeguro = String(nomeArquivo || '').trim();
+
+            // Aceita apenas nomes de arquivos JSON, sem caminhos de pastas.
+            if (
+              !nomeSeguro ||
+              nomeSeguro.includes('/') ||
+              nomeSeguro.includes('\\') ||
+              !nomeSeguro.toLowerCase().endsWith('.json')
+            ) {
+              console.warn('Nome de arquivo inválido:', nomeArquivo);
+              return null;
+            }
+
+            const resposta = await fetch(
+              BASE_PATH + 'content/posts/' +
+                encodeURIComponent(nomeSeguro),
+              { cache: 'no-store' }
+            );
+
+            if (!resposta.ok) {
+              throw new Error(
+                'Erro HTTP ' + resposta.status + ': ' + nomeSeguro
+              );
+            }
+
+            const dados = await resposta.json();
+
+            // Cada arquivo deve conter um objeto de publicação.
+            if (
+              !dados ||
+              typeof dados !== 'object' ||
+              Array.isArray(dados)
+            ) {
+              throw new Error(
+                'Formato inválido no arquivo ' + nomeSeguro
+              );
+            }
+
+            return dados;
+          } catch (erro) {
+            console.error(
+              'Erro ao carregar uma publicação individual:',
+              erro
+            );
+            return null;
+          }
+        })
+      );
+
+      const novas = resultados.filter(Boolean);
+
+      // 4. Combina as duas fontes e evita duplicações.
+      // Se título, data e categoria forem iguais, a publicação
+      // individual prevalece sobre a antiga.
+      const publicacoesPorChave = new Map();
+
+      [...antigas, ...novas].forEach((item) => {
+        if (!item || typeof item !== 'object') return;
+
+        const chave = [
+          String(item.title || '').trim().toLowerCase(),
+          String(item.date || '').trim(),
+          normalizeBlog(item.blog)
+        ].join('|');
+
+        publicacoesPorChave.set(
+          chave,
+          item
+        );
+      });
+
+      const todas = Array.from(publicacoesPorChave.values());
+
+      // 5. Mantém a separação entre as categorias.
       const currentBlog = normalizeBlog(blogMode);
 
-      const visible = items.filter((item) => {
+      const visiveis = todas.filter((item) => {
         return (
-          item &&
           item.published === true &&
           normalizeBlog(item.blog) === currentBlog
         );
       });
 
-      visible.sort((a, b) =>
+      // 6. Ordena da publicação mais recente para a mais antiga.
+      visiveis.sort((a, b) =>
         String(b.date || '').localeCompare(String(a.date || ''))
       );
 
       feed.replaceChildren();
 
-      if (!visible.length) {
-        const messages = {
+      if (!visiveis.length) {
+        const mensagens = {
           reflexoes: 'Ainda não há publicações em Reflexões.',
           diario: 'Ainda não há publicações no Diário Audiovisual.',
           filosofia: 'Ainda não há publicações em Filosofia.',
           literatura: 'Ainda não há publicações em Literatura.',
           poesia: 'Ainda não há publicações em Poesia.',
           'temas-diversos':
-            'Ainda não há publicações em Temas Diversos.'
+            'Ainda não há publicações em Temas Diversos.',
+          blog: 'Ainda não há publicações no Blog.'
         };
 
         feed.append(
           make(
             'div',
             'blog-empty',
-            messages[currentBlog] ||
+            mensagens[currentBlog] ||
               'Ainda não há publicações nesta seção.'
           )
         );
@@ -390,23 +498,22 @@ function renderArchive(items) {
         return;
       }
 
+      // 7. Preserva o sistema de arquivo que você já utiliza.
+      feed.append(renderArchive(visiveis));
 
-
-      // Todas as páginas usam o sistema de arquivo.
-      feed.append(renderArchive(visible));
-
-    })
-    .catch((error) => {
-      console.error('Erro ao carregar o blog:', error);
+    } catch (erro) {
+      console.error('Erro ao carregar o blog:', erro);
 
       feed.replaceChildren(
         make(
           'div',
           'blog-empty',
-          'Não foi possível carregar as publicações. Verifique o arquivo content/posts.json e o Console do navegador.'
+          'Não foi possível carregar as publicações antigas. Verifique content/posts.json e o Console do navegador.'
         )
       );
-    });
+    }
+  })();
+
   
 /* Último texto publicado na página inicial */
 async function carregarUltimoTexto() {

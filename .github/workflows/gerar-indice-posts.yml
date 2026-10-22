@@ -1,0 +1,41 @@
+
+name: Atualizar índice de publicações
+
+on:
+  push:
+    paths:
+      - 'content/posts/**'
+      - 'scripts/gerar_indice_posts.py'
+      - '.github/workflows/gerar-indice-posts.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  atualizar-indice:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Gerar índice automaticamente
+        run: python scripts/gerar_indice_posts.py
+
+      - name: Salvar índice no GitHub
+        run: |
+          git add content/posts-index.json
+          if git diff --cached --quiet; then
+            echo "O índice já está atualizado."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "Atualiza índice de publicações"
+            git push
+          fi

@@ -514,3 +514,42 @@ body {
 body > .wrap {
     flex: 1;
 }
+
+/* TEXTO SORTIDO */
+
+.random-publication {
+  margin: 2.5rem 0;
+}
+
+.random-post-card {
+  padding: 1.75rem;
+  background: var(--light, #fbf9f4);
+  border: 1px solid var(--cream2, #e8dfd0);
+  border-left: 4px solid var(--primary, #8a513d);
+  border-radius: 4px;
+}
+
+.random-post-category {
+  display: block;
+  margin-bottom: 0.8rem;
+  color: var(--primary, #8a513d);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.random-post-title {
+  margin: 0 0 1rem;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.6rem;
+  line-height: 1.35;
+}
+
+.random-post-summary {
+  margin-bottom: 1.25rem;
+  line-height: 1.8;
+}
+
+.random-post-card .text-link {
+  display: inline-block;
+}

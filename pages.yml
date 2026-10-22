@@ -1,7 +1,19 @@
 
 media:
-  input: media
-  output: /media
+  - name: images
+    label: Imagens das publicações
+    input: media
+    output: /Andarilho/media
+    extensions:
+      - jpg
+      - jpeg
+      - png
+      - webp
+      - gif
+    categories:
+      - image
+      - gif
+    rename: safe
 
 content:
   - name: posts
@@ -25,11 +37,25 @@ content:
         type: string
 
       - name: body
-        label: Texto
+        label: Texto da publicação
         type: rich-text
+        options:
+          format: html
+          switcher: true
+          media: images
+          path: media/images
+          extensions:
+            - jpg
+            - jpeg
+            - png
+            - webp
+            - gif
+          categories:
+            - image
+          rename: safe
 
       - name: kind
-        label: Tipo de publicação
+        label: "INCORPORAR VIDEO: [VIDEO](LINK) E REMOVER HIPERLINK"
         type: select
         options:
           values:
@@ -50,7 +76,8 @@ content:
             - Literatura
             - Poesia
             - Temas Diversos
-            
+            - Blog
+
       - name: published
         label: Publicar no site
         type: boolean

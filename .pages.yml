@@ -1,8 +1,9 @@
+
 media:
   - name: images
-    label: Imagens das publicações
-    input: media
-    output: /Andarilho/media
+    label: Imagens e GIFs
+    input: media/images
+    output: /Andarilho/media/images
     extensions:
       - jpg
       - jpeg
@@ -11,7 +12,16 @@ media:
       - gif
     categories:
       - image
-      - gif
+    rename: safe
+
+  - name: videos
+    label: Vídeos MP4
+    input: media/videos
+    output: /Andarilho/media/videos
+    extensions:
+      - mp4
+    categories:
+      - video
     rename: safe
 
     
@@ -61,6 +71,7 @@ content:
             - png
             - webp
             - gif
+            - mp4
           categories:
             - image
           rename: safe

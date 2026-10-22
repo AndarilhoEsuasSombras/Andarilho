@@ -79,7 +79,15 @@
     );
 
     const link = criar('a', 'text-link', 'Ler texto completo ↗');
-    link.href = BASE + destino;
+link.href =
+  BASE + destino +
+  '#post=' + encodeURIComponent(
+    [
+      String(post.title || '').trim().toLowerCase(),
+      String(post.date || '').trim(),
+      normalizar(post.blog)
+    ].join('|')
+  );
 
     cartao.append(link);
     container.replaceChildren(cartao);

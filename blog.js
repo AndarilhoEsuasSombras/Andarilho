@@ -524,10 +524,10 @@ async function carregarUltimoTexto() {
   const BASE = "/Andarilho/";
 
   const categorias = {
-    "filosofia": "filosofia.html",
-    "literatura": "literatura.html",
-    "poesia": "poesia.html",
-    "temas diversos": "temas-diversos.html",
+    "Filosofia": "filosofia.html",
+    "Literatura": "literatura.html",
+    "Poesia": "poesia.html",
+    "Temas diversos": "temas-diversos.html",
   };
 
   const normalizar = texto =>

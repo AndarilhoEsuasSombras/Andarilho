@@ -501,6 +501,16 @@ body {
     flex-direction: column;
 }
 
+.blog-post-body video {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem auto;
+  border-radius: 8px;
+  background: #000;
+}
+
 body > .wrap {
     flex: 1;
 }

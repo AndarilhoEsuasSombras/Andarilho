@@ -131,17 +131,20 @@ function fixImagePaths(container) {
   }
 
   // Cria um vídeo incorporado sem inserir HTML de iframe vindo do texto.
-  function createYouTubeVideo(url) {
-    const id = escapeYouTubeId(url);
+// Cria um player do YouTube ou de um arquivo MP4.
+function createVideo(url) {
+  if (!url) return null;
 
-    if (!id) return null;
+  // Mantém o suporte aos vídeos do YouTube.
+  const youtubeId = escapeYouTubeId(url);
 
+  if (youtubeId) {
     const wrapper = make('div', 'blog-video-frame');
     const iframe = document.createElement('iframe');
 
     iframe.src =
       'https://www.youtube-nocookie.com/embed/' +
-      encodeURIComponent(id);
+      encodeURIComponent(youtubeId);
 
     iframe.title = 'Vídeo do YouTube';
     iframe.loading = 'lazy';
@@ -151,9 +154,36 @@ function fixImagePaths(container) {
     iframe.allowFullscreen = true;
 
     wrapper.append(iframe);
-
     return wrapper;
   }
+
+  // Aceita MP4 hospedado no próprio site.
+  let videoURL;
+
+  try {
+    videoURL = new URL(url, window.location.origin);
+  } catch (error) {
+    return null;
+  }
+
+  if (videoURL.origin !== window.location.origin) return null;
+  if (!/\.mp4$/i.test(videoURL.pathname)) return null;
+
+  // Corrige caminhos como /media/videos/exemplo.mp4.
+  if (videoURL.pathname.startsWith('/media/')) {
+    videoURL.pathname =
+      BASE_PATH + videoURL.pathname.slice(1);
+  }
+
+  const video = document.createElement('video');
+  video.controls = true;
+  video.preload = 'metadata';
+  video.playsInline = true;
+  video.setAttribute('aria-label', 'Vídeo da publicação');
+  video.src = videoURL.pathname + videoURL.search;
+
+  return video;
+}
 
   // Converte o texto da publicação, incluindo vídeos no meio do conteúdo.
   function renderBody(originalSource) {
@@ -187,7 +217,7 @@ function fixImagePaths(container) {
     // colocado a marcação no meio de um parágrafo.
 
 const videoPattern =
-  /\[VIDEO\]\(\s*(?:<a\b[^>]*href=["'](https?:\/\/[^"']+)["'][^>]*>[\s\S]*?<\/a>|(https?:\/\/[^\s)]+))\s*\)/gi;
+  /\[VIDEO\]\(\s*(?:<a\b[^>]*href=["']([^"']+)["'][^>]*>[\s\S]*?<\/a>|([^\s)]+))\s*\)/gi;
 
     let lastIndex = 0;
     let match;
@@ -199,7 +229,7 @@ const videoPattern =
         source.slice(lastIndex, match.index)
       );
 
-const video = createYouTubeVideo(match[1] || match[2]);
+const video = createVideo(match[1] || match[2]);
 
       if (video) {
         body.append(video);
@@ -316,7 +346,7 @@ function renderArchive(items) {
 
     // Publicação exclusivamente em vídeo.
     if (item.kind === 'video') {
-      const video = createYouTubeVideo(item.video_url || '');
+const video = createVideo(item.video_url || '');
 
       if (video) {
         article.append(video);

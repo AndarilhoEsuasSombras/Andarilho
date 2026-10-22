@@ -15,13 +15,25 @@ media:
       - gif
     rename: safe
 
+
 content:
   - name: posts
     label: Publicações do blog
-    type: file
-    path: content/posts.json
+    type: collection
+    path: content/posts
+    filename: "{primary}.json"
     format: json
-    list: true
+
+    view:
+      primary: title
+      fields:
+        - title
+        - date
+        - blog
+        - published
+      sort: date
+      order: desc
+
     fields:
       - name: title
         label: Título

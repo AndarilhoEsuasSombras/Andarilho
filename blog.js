@@ -83,15 +83,24 @@
   }
 
   // Corrige os caminhos das imagens do GitHub Pages.
-  function fixImagePaths(container) {
-    container.querySelectorAll('img').forEach((img) => {
-      const src = img.getAttribute('src');
 
-      if (src && src.startsWith('/media/')) {
-        img.setAttribute('src', BASE_PATH + src.slice(1));
+function fixImagePaths(container) {
+  container.querySelectorAll(
+    'img, video, audio, source'
+  ).forEach((element) => {
+    for (const atributo of ['src', 'poster']) {
+      const valor = element.getAttribute(atributo);
+
+      if (valor && valor.startsWith('/media/')) {
+        element.setAttribute(
+          atributo,
+          BASE_PATH + valor.slice(1)
+        );
       }
-    });
-  }
+    }
+  });
+}
+
 
   // Converte entidades HTML, como >, em caracteres normais.
   function decodeEntities(value) {

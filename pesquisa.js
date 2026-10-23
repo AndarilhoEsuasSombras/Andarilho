@@ -73,13 +73,24 @@
     return paginas[normalizar(categoria)] || 'blog.html';
   }
 
-  function chaveDoPost(post) {
-    return [
-      normalizar(post.title),
-      String(post.date || '').trim(),
-      normalizar(post.blog || post.category)
-    ].join('|');
-  }
+
+function normalizarCategoria(valor) {
+  return String(valor || '')
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[_\s]+/g, '-');
+}
+
+function chaveDoPost(post) {
+  return [
+    String(post.title || '').trim().toLowerCase(),
+    String(post.date || '').trim(),
+    normalizarCategoria(post.blog)
+  ].join('|');
+}
+
 
   function extrairTexto(post) {
     const partes = [

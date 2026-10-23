@@ -66,8 +66,7 @@
 
     const cartao = criar('article', 'random-post-card');
 
-    cartao.append(
-
+  
 const dataFormatada = post.date
   ? new Date(post.date + 'T12:00:00').toLocaleDateString('pt-BR', {
       day: '2-digit',
@@ -82,11 +81,10 @@ if (dataFormatada) {
   meta.append(criar('span', '', dataFormatada));
 }
 
-meta.append(
-  criar('span', '', categoriaOriginal)
-);
+meta.append(criar('span', '', categoriaOriginal));
 
 cartao.append(meta);
+
 
 
     cartao.append(

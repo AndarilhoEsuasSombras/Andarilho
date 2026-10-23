@@ -684,72 +684,63 @@ body > .wrap {
 
 
 
-/* Seção de pesquisa da página inicial */
-.home-search-section {
-    max-width: 850px;
-    margin: 55px auto 65px;
-    padding: 42px 30px;
-    text-align: center;
-    background-color: #e8dfd0;
-    border-top: 2px solid #a51f2b;
-    border-bottom: 1px solid #c5a77b;
-}
 
-.home-search-eyebrow {
-    display: block;
-    margin-bottom: 14px;
-    color: #a51f2b;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
+/* Pesquisa na página inicial — estilo editorial */
+.home-search-section {
+    max-width: 100%;
+    margin: 45px 0 55px;
+    padding: 0;
+    text-align: left;
+    background: transparent;
+    border: none;
 }
 
 .home-search-section h2 {
-    margin-bottom: 14px;
+    margin: 0 0 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #24241f;
     color: #24241f;
     font-family: 'Playfair Display', Georgia, serif;
-    font-size: clamp(32px, 5vw, 48px);
+    font-size: 32px;
     font-weight: 700;
 }
 
 .home-search-section p {
-    max-width: 600px;
-    margin: 0 auto 26px;
-    color: #444139;
-    font-size: 15px;
+    margin: 18px 0 22px;
+    color: #625b50;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 16px;
     line-height: 1.8;
 }
 
 .home-search-button {
     display: inline-block;
-    padding: 14px 25px;
-    background-color: #a51f2b;
-    border: 1px solid #a51f2b;
-    color: #fff;
-    font-size: 12px;
+    padding: 0 0 7px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid #a51f2b;
+    color: #24241f;
+    font-size: 11px;
     font-weight: 600;
-    letter-spacing: 1.5px;
+    letter-spacing: 1.4px;
     text-decoration: none;
-    transition: background-color 0.2s ease;
+    transition: color 0.2s ease;
 }
 
 .home-search-button:hover {
-    background-color: #861923;
-    border-color: #861923;
-    color: #fff;
-}
-
-.home-search-button span {
-    margin-left: 8px;
-    font-size: 18px;
+    background: transparent;
+    color: #a51f2b;
 }
 
 @media (max-width: 600px) {
     .home-search-section {
-        margin: 35px 16px 45px;
-        padding: 32px 18px;
+        margin: 35px 0 45px;
+    }
+
+    .home-search-section h2 {
+        font-size: 28px;
     }
 }
+
 
 

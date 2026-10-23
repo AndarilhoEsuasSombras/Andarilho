@@ -53,10 +53,7 @@ content:
         label: Data
         type: date
 
-- name: time
-       label: Horário da publicação
-       type: string
-       required: false
+
 
       - name: summary
         label: Resumo

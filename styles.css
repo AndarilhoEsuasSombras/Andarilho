@@ -649,3 +649,17 @@ body > .wrap {
   }
 }
 
+
+/* DATA E CATEGORIA DO TEXTO SORTIDO */
+
+.random-post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-bottom: 15px;
+  color: var(--red, #b51f24);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}

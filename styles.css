@@ -754,8 +754,8 @@ body > .wrap {
     height: 50px;
     padding: 0 !important;
     box-sizing: border-box;
-    color: #fff !important;
-    background-color: #a51f2b;
+background-color: transparent;
+color: #24241f;
     border-right: 1px solid #c5a77b;
     text-decoration: none;
 }
@@ -769,9 +769,9 @@ body > .wrap {
 
 .nav-search:hover,
 .nav-search:focus-visible {
+    background-color: #a51f2b;
     color: #fff !important;
-    background-color: #861923;
-    outline-offset: -3px;
+}
 }
 
 

@@ -26,7 +26,6 @@
     "temas diversos": "temas-diversos.html",
     "reflexoes": "reflexoes.html",
     "diario audiovisual": "diario-audiovisual.html",
-    "blog": "blog.html"
   };
 
   try {

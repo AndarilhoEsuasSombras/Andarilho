@@ -775,3 +775,28 @@ color: #24241f;
 }
 
 
+/* Estado normal dos botões do menu */
+.nav-search {
+    background-color: transparent;
+    color: #24241f;
+}
+
+/* Página atualmente selecionada */
+.nav-search.active,
+.nav-search[aria-current="page"] {
+    background-color: #a51f2b;
+    color: #fff !important;
+}
+
+/* Demais links do menu */
+nav a.active,
+nav a[aria-current="page"] {
+    background-color: #a51f2b;
+    color: #fff !important;
+}
+
+/* Efeito ao passar o mouse nos links não selecionados */
+nav a:not(.active):not([aria-current="page"]):hover {
+    color: #a51f2b;
+}
+

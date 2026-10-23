@@ -73,6 +73,17 @@ function getPostKey(item) {
         }).format(date);
   }
 
+
+  // Formata o horário da publicação.
+  function formatTime(value) {
+    if (!value) return '';
+
+    const match = String(value).match(/^([01]\d|2[0-3]):([0-5]\d)$/);
+
+    return match ? match[0] : '';
+  }
+
+  
   // Aceita nomes de seção com maiúsculas, espaços ou acentos.
   function normalizeBlog(value) {
     let name = String(value || '')
@@ -353,11 +364,21 @@ function renderArchive(items) {
       )
     );
 
-    if (item.date) {
-      meta.append(
-        make('span', 'blog-post-date', formatDate(item.date))
-      );
-    }
+
+  if (item.date) {
+    meta.append(
+      make('span', 'blog-post-date', formatDate(item.date))
+    );
+  }
+
+  const horario = formatTime(item.time);
+
+  if (horario) {
+    meta.append(
+      make('span', 'blog-post-time', horario)
+    );
+  }
+
 
     article.append(meta);
 

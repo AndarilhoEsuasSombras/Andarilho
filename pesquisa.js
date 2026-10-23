@@ -28,6 +28,54 @@
     return elemento;
   }
 
+function destacarTexto(elemento, texto, termo) {
+  const original = String(texto || '');
+  const palavra = normalizar(termo);
+
+  if (!palavra) {
+    elemento.textContent = original;
+    return;
+  }
+
+  let inicio = 0;
+  let posicao = 0;
+
+  while (posicao < original.length) {
+    let fim = posicao + 1;
+
+    // Compara também palavras com ou sem acentos.
+    while (
+      fim <= original.length &&
+      normalizar(original.slice(posicao, fim)).length <
+        palavra.length
+    ) {
+      fim++;
+    }
+
+    if (normalizar(original.slice(posicao, fim)) === palavra) {
+      elemento.appendChild(
+        document.createTextNode(original.slice(inicio, posicao))
+      );
+
+      const destaque = document.createElement('mark');
+      destaque.className = 'search-highlight';
+      destaque.textContent = original.slice(posicao, fim);
+      elemento.appendChild(destaque);
+
+      inicio = fim;
+      posicao = fim;
+    } else {
+      posicao++;
+    }
+  }
+
+  elemento.appendChild(
+    document.createTextNode(original.slice(inicio))
+  );
+}
+
+  
+
   function limparHTML(html) {
     const documento = new DOMParser().parseFromString(
       String(html || ''),
@@ -104,51 +152,62 @@ function chaveDoPost(post) {
     return limparHTML(partes.filter(Boolean).join(' '));
   }
 
-  function criarResultado(post, termo) {
-    const categoria = categoriaDoPost(post);
-    const artigo = criarElemento('article', 'search-result');
 
-    const meta = criarElemento(
-      'div',
-      'search-result-meta',
-      `${categoria} · ${dataFormatada(post.date)}`
+function criarResultado(post, termo) {
+  const categoria = categoriaDoPost(post);
+  const artigo = criarElemento('article', 'search-result');
+
+  const meta = criarElemento(
+    'div',
+    'search-result-meta',
+    `${categoria} · ${dataFormatada(post.date)}`
+  );
+
+  const titulo = criarElemento('h2');
+  const link = document.createElement('a');
+
+  destacarTexto(link, post.title, termo);
+
+  const destino = new URL(
+    paginaDaCategoria(categoria),
+    window.location.origin + BASE
+  );
+
+  destino.hash = 'post=' + chaveDoPost(post);
+
+  link.href = destino.pathname + destino.hash;
+  titulo.appendChild(link);
+
+  const textoCompleto = extrairTexto(post);
+  const textoNormalizado = normalizar(textoCompleto);
+  const palavra = normalizar(termo);
+  const posicao = textoNormalizado.indexOf(palavra);
+
+  let trecho = textoCompleto;
+
+  if (posicao >= 0) {
+    const inicio = Math.max(0, posicao - 100);
+    const fim = Math.min(
+      textoCompleto.length,
+      posicao + termo.length + 180
     );
 
-    const titulo = criarElemento('h2');
-    const link = criarElemento('a', '', post.title);
-
-    const destino = new URL(
-      paginaDaCategoria(categoria),
-      window.location.origin + BASE
-    );
-
-    destino.hash = 'post=' + chaveDoPost(post);
-
-    link.href = destino.pathname + destino.hash;
-    titulo.appendChild(link);
-
-    const textoCompleto = extrairTexto(post);
-    const textoNormalizado = normalizar(textoCompleto);
-    const posicao = textoNormalizado.indexOf(normalizar(termo));
-
-    let trecho = textoCompleto;
-
-    if (posicao >= 0) {
-      const inicio = Math.max(0, posicao - 100);
-      const fim = Math.min(textoCompleto.length, posicao + termo.length + 180);
-
-      trecho =
-        (inicio > 0 ? '…' : '') +
-        textoCompleto.slice(inicio, fim).trim() +
-        (fim < textoCompleto.length ? '…' : '');
-    } else if (trecho.length > 220) {
-      trecho = trecho.slice(0, 220).trim() + '…';
-    }
-
-    artigo.append(meta, titulo, criarElemento('p', '', trecho));
-
-    return artigo;
+    trecho =
+      (inicio > 0 ? '…' : '') +
+      textoCompleto.slice(inicio, fim).trim() +
+      (fim < textoCompleto.length ? '…' : '');
+  } else if (trecho.length > 220) {
+    trecho = trecho.slice(0, 220).trim() + '…';
   }
+
+  const paragrafo = criarElemento('p');
+  destacarTexto(paragrafo, trecho, termo);
+
+  artigo.append(meta, titulo, paragrafo);
+
+  return artigo;
+}
+
 
   async function carregarPublicacoes() {
     const mapa = new Map();

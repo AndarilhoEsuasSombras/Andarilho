@@ -1,0 +1,208 @@
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Pesquise textos, ensaios, poemas e reflexões do Caderno de Ideias.">
+  <title>Pesquisar - Andarilho e suas Sombras</title>
+
+  <link rel="icon" type="image/png" href="/Andarilho/favicon.png">
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .search-page {
+      max-width: 850px;
+      margin: 55px auto 80px;
+    }
+
+    .search-intro {
+      margin-bottom: 32px;
+    }
+
+    .search-intro h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+
+    .search-form {
+      display: flex;
+      gap: 10px;
+      margin: 28px 0 18px;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 0;
+      padding: 15px 17px;
+      border: 1px solid #c5a77b;
+      border-radius: 3px;
+      background: #fbf9f4;
+      color: #24241f;
+      font: inherit;
+    }
+
+    .search-button {
+      padding: 14px 22px;
+      border: 0;
+      border-radius: 3px;
+      background: #8a513d;
+      color: white;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .search-button:hover {
+      opacity: .88;
+    }
+
+    .search-status {
+      margin: 20px 0;
+      line-height: 1.6;
+    }
+
+    .search-results {
+      display: grid;
+      gap: 18px;
+    }
+
+    .search-result {
+      padding: 22px;
+      border: 1px solid #e8dfd0;
+      background: #fbf9f4;
+    }
+
+    .search-result h2 {
+      font-size: 1.4rem;
+      line-height: 1.35;
+      margin: 10px 0;
+    }
+
+    .search-result h2 a {
+      color: #8a513d;
+      text-decoration: none;
+    }
+
+    .search-result h2 a:hover {
+      text-decoration: underline;
+    }
+
+    .search-result-meta {
+      font-size: .78rem;
+      opacity: .75;
+    }
+
+    .search-result p {
+      line-height: 1.8;
+    }
+
+    .search-empty {
+      padding: 25px 0;
+      opacity: .8;
+    }
+
+    @media (max-width: 520px) {
+      .search-form {
+        flex-direction: column;
+      }
+
+      .search-button {
+        width: 100%;
+      }
+
+      .search-result {
+        padding: 17px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topline"></div>
+
+  <div class="wrap">
+    <header class="masthead">
+      <div>
+        <p class="eyebrow">Arquivo de escritos · desde 2026</p>
+        <a class="brand" href="index.html">
+          Andarilho <span>e suas</span> Sombras
+        </a>
+      </div>
+      <div class="tagline">Livros, artigos, poemas - pensamentos.</div>
+    </header>
+
+    <nav class="nav" aria-label="Menu principal">
+      <div class="nav-track">
+        <a href="filosofia.html">Filosofia</a>
+        <a href="literatura.html">Literatura</a>
+        <a href="poesia.html">Poesia</a>
+        <a href="temas-diversos.html">Temas diversos</a>
+        <a href="blog.html">Blog</a>
+        <a href="pesquisa.html" aria-current="page">Pesquisar ⌕</a>
+        <a href="videos.html">Videoaulas</a>
+        <a href="https://clubedeautores.com.br/livro/tenho-no-coracao-a-tatuagem-do-diabo"
+           target="_blank" rel="noopener noreferrer">Livros publicados</a>
+      </div>
+    </nav>
+
+    <main class="search-page">
+      <section class="search-intro">
+        <p class="kicker">Arquivo de escritos</p>
+        <h1>Encontre uma <em>ideia.</em></h1>
+        <p>
+          Pesquise ensaios, reflexões, poemas e outros textos
+          publicados no Caderno de Ideias.
+        </p>
+      </section>
+
+      <form id="search-form" class="search-form">
+        <input
+          id="search-input"
+          class="search-input"
+          type="search"
+          placeholder="Digite uma palavra, autor ou título..."
+          aria-label="Pesquisar publicações"
+          autocomplete="off"
+          required
+        >
+        <button class="search-button" type="submit">
+          Pesquisar ⌕
+        </button>
+      </form>
+
+      <p id="search-status" class="search-status" aria-live="polite">
+        Digite uma palavra para começar sua pesquisa.
+      </p>
+
+      <section
+        id="search-results"
+        class="search-results"
+        aria-label="Resultados da pesquisa"
+      ></section>
+    </main>
+  </div>
+
+    <footer class="footer">
+
+        <div class="wrap footer-inner">
+
+            <p class="footer-mark">© 2026 · Andarilho e Suas Sombras</p>
+
+            <p>
+
+<a href="#topo" onclick="event.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' });">Voltar ao início ↑</a>
+
+            </p>
+            
+            <p class="footer-mark">
+                Em busca da palavra nua.
+            </p>
+
+        </div>
+
+     </footer>
+
+  <script src="pesquisa.js"></script>
+</body>
+</html>

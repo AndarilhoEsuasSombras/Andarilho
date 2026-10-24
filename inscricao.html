@@ -1,0 +1,331 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Receba por e-mail novas publicações do Caderno de Ideias.">
+  <title>Newsletter | Caderno de Ideias</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #8a513d;
+      --secondary: #c5a77b;
+      --dark: #24241f;
+      --cream: #f3efe6;
+      --light: #fbf9f4;
+      --green: #626d54;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--cream);
+      color: var(--dark);
+      font-family: 'Poppins', sans-serif;
+      line-height: 1.7;
+    }
+
+    .topline {
+      height: 5px;
+      background: var(--primary);
+    }
+
+    header {
+      padding: 25px 20px;
+      text-align: center;
+      border-bottom: 1px solid #d9cebd;
+    }
+
+    header a {
+      color: var(--primary);
+      text-decoration: none;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    main {
+      width: min(650px, calc(100% - 32px));
+      margin: 55px auto;
+      padding: 38px;
+      background: var(--light);
+      border: 1px solid #e4dacb;
+      border-radius: 8px;
+      box-shadow: 0 8px 30px #24241f0c;
+    }
+
+    .eyebrow {
+      color: var(--primary);
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 8px 0 15px;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 6vw, 2.8rem);
+      line-height: 1.2;
+    }
+
+    .intro {
+      color: #625d54;
+      margin-bottom: 28px;
+    }
+
+    label, legend {
+      font-weight: 600;
+      font-size: .92rem;
+    }
+
+    input[type="email"] {
+      width: 100%;
+      padding: 14px;
+      margin-top: 8px;
+      border: 1px solid #cfc3b1;
+      border-radius: 4px;
+      background: white;
+      color: var(--dark);
+      font: inherit;
+    }
+
+    fieldset {
+      margin: 25px 0;
+      padding: 18px;
+      border: 1px solid #ded3c3;
+      border-radius: 4px;
+    }
+
+    .opcao {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+      font-weight: 400;
+      cursor: pointer;
+    }
+
+    input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      accent-color: var(--primary);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border: 0;
+      border-radius: 4px;
+      background: var(--primary);
+      color: white;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    button:hover {
+      background: #6f3e2e;
+    }
+
+    button:disabled {
+      opacity: .65;
+      cursor: wait;
+    }
+
+    .aviso {
+      margin-top: 18px;
+      padding: 13px;
+      border-radius: 4px;
+      font-size: .9rem;
+      display: none;
+      overflow-wrap: anywhere;
+    }
+
+    .aviso.sucesso {
+      display: block;
+      background: #e7eee2;
+      color: #34452e;
+    }
+
+    .aviso.erro {
+      display: block;
+      background: #f6e5e0;
+      color: #7b3025;
+    }
+
+    .privacidade {
+      margin-top: 20px;
+      color: #777064;
+      font-size: .78rem;
+    }
+
+    footer {
+      padding: 20px;
+      text-align: center;
+      color: #777064;
+      font-size: .82rem;
+    }
+
+    footer a {
+      color: var(--primary);
+    }
+
+    @media (max-width: 500px) {
+      main {
+        margin: 25px auto;
+        padding: 25px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topline"></div>
+
+  <header>
+    <a href="/Andarilho/">Caderno de Ideias</a>
+  </header>
+
+  <main>
+    <div class="eyebrow">Arquivo de escritos · desde 2026</div>
+
+    <h1>Receba novas ideias por e-mail.</h1>
+
+    <p class="intro">
+      Inscreva-se para receber um aviso sempre que uma nova publicação
+      for lançada nas categorias que você escolher.
+    </p>
+
+    <form id="form-inscricao">
+      <label for="email">Seu endereço de e-mail</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="voce@exemplo.com"
+        autocomplete="email"
+        required
+      >
+
+      <fieldset>
+        <legend>Quais assuntos você deseja acompanhar?</legend>
+
+        <label class="opcao">
+          <input type="checkbox" name="categories" value="filosofia">
+          Filosofia
+        </label>
+
+        <label class="opcao">
+          <input type="checkbox" name="categories" value="literatura">
+          Literatura
+        </label>
+
+        <label class="opcao">
+          <input type="checkbox" name="categories" value="poesia">
+          Poesia
+        </label>
+
+        <label class="opcao">
+          <input type="checkbox" name="categories" value="temas-diversos">
+          Temas diversos
+        </label>
+      </fieldset>
+
+      <button type="submit" id="botao">
+        Inscrever-se
+      </button>
+
+      <div id="mensagem" class="aviso" role="status" aria-live="polite"></div>
+    </form>
+
+    <p class="privacidade">
+      Você receberá apenas avisos das categorias escolhidas. Será possível
+      cancelar a inscrição a qualquer momento pelo link presente nos e-mails.
+    </p>
+  </main>
+
+  <footer>
+    <a href="/Andarilho/">Voltar ao site</a>
+  </footer>
+
+  <script>
+    const WORKER_URL =
+      'https://caderno-newsletter.andarilhosuassombras.workers.dev';
+
+    const form = document.getElementById('form-inscricao');
+    const botao = document.getElementById('botao');
+    const mensagem = document.getElementById('mensagem');
+
+    form.addEventListener('submit', async function (event) {
+      event.preventDefault();
+
+      mensagem.className = 'aviso';
+      mensagem.textContent = '';
+
+      const email = document.getElementById('email').value.trim();
+
+      const categories = Array.from(
+        form.querySelectorAll('input[name="categories"]:checked')
+      ).map(function (checkbox) {
+        return checkbox.value;
+      });
+
+      if (categories.length === 0) {
+        mensagem.className = 'aviso erro';
+        mensagem.textContent =
+          'Selecione pelo menos uma categoria para continuar.';
+        return;
+      }
+
+      botao.disabled = true;
+      botao.textContent = 'Enviando...';
+
+      try {
+        const resposta = await fetch(WORKER_URL + '/subscribe', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: email,
+            categories: categories
+          })
+        });
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok) {
+          throw new Error(
+            dados.error || dados.message ||
+            'Não foi possível realizar a inscrição.'
+          );
+        }
+
+        mensagem.className = 'aviso sucesso';
+        mensagem.textContent =
+          dados.message ||
+          'Solicitação enviada! Confira seu e-mail e clique no link de confirmação.';
+
+        form.reset();
+      } catch (erro) {
+        mensagem.className = 'aviso erro';
+        mensagem.textContent =
+          erro.message ||
+          'Não foi possível conectar ao serviço. Tente novamente.';
+      } finally {
+        botao.disabled = false;
+        botao.textContent = 'Inscrever-se';
+      }
+    });
+  </script>
+</body>
+</html>

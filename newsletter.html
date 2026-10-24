@@ -1,0 +1,116 @@
+
+<section class="newsletter-section">
+  <h2>Receba novas ideias</h2>
+  <p>
+    Receba um aviso por e-mail sempre que um novo texto
+    for publicado nas categorias que você escolher.
+  </p>
+
+  <form id="newsletter-form">
+    <label for="newsletter-email">Seu e-mail</label>
+    <input
+      type="email"
+      id="newsletter-email"
+      name="email"
+      placeholder="voce@exemplo.com"
+      autocomplete="email"
+      required
+    >
+
+    <fieldset>
+      <legend>Quais assuntos você deseja receber?</legend>
+
+      <label>
+        <input type="checkbox" name="categories"
+          value="filosofia">
+        Filosofia
+      </label>
+
+      <label>
+        <input type="checkbox" name="categories"
+          value="literatura">
+        Literatura
+      </label>
+
+      <label>
+        <input type="checkbox" name="categories"
+          value="poesia">
+        Poesia
+      </label>
+
+      <label>
+        <input type="checkbox" name="categories"
+          value="temas-diversos">
+        Temas diversos
+      </label>
+    </fieldset>
+
+    <label class="newsletter-consent">
+      <input type="checkbox" id="newsletter-consent"
+        required>
+      Aceito receber e-mails sobre novas publicações
+      e entendo que posso cancelar a inscrição.
+    </label>
+
+    <button type="submit">Inscrever-se</button>
+    <p id="newsletter-status" role="status"
+      aria-live="polite"></p>
+  </form>
+</section>
+
+<script>
+(() => {
+  const form = document.getElementById("newsletter-form");
+  const status = document.getElementById("newsletter-status");
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const email = document.getElementById("newsletter-email")
+      .value.trim();
+
+    const categories = Array.from(
+      form.querySelectorAll(
+        'input[name="categories"]:checked'
+      )
+    ).map(input => input.value);
+
+    if (categories.length === 0) {
+      status.textContent =
+        "Escolha pelo menos uma categoria.";
+      return;
+    }
+
+    status.textContent = "Enviando inscrição...";
+
+    try {
+      const response = await fetch(
+        "COLOQUE_AQUI_A_URL_DO_WORKER/subscribe",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ email, categories })
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          result.error || "Não foi possível concluir a inscrição."
+        );
+      }
+
+      status.textContent =
+        "Inscrição recebida! Obrigado por acompanhar o Caderno de Ideias.";
+
+      form.reset();
+    } catch (error) {
+      status.textContent =
+        "Não foi possível concluir a inscrição. Tente novamente.";
+    }
+  });
+})();
+</script>

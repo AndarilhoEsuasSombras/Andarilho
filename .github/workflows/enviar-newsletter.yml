@@ -33,6 +33,7 @@ jobs:
           import subprocess
           import urllib.request
           import urllib.error
+          import time
           from pathlib import Path
           from urllib.parse import quote
 
@@ -139,11 +140,14 @@ jobs:
                   "https://andarilhoesuassombras.github.io/Andarilho/"
                   + pagina + "#post=" + quote(chave, safe="")
               )
+              
 
+              resumo = str(atual.get("summary", "")).strip()
               dados = json.dumps({
                   "id": arquivo.name,
                   "title": titulo,
-                  "category": categoria,
+                   "summary": resumo,
+                   "category": categoria,
                   "url": link
               }).encode("utf-8")
 
@@ -159,6 +163,8 @@ jobs:
               )
 
               try:
+              print("Aguardando 2 minutos para o site atualizar...")
+              time.sleep(60)
                   with urllib.request.urlopen(requisicao, timeout=60) as resposta:
                       resultado = json.loads(resposta.read().decode("utf-8"))
                       print(f"Worker respondeu para {caminho}: {resultado}")

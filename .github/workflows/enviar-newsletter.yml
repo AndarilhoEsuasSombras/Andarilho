@@ -45,7 +45,6 @@ jobs:
           if not token:
               raise SystemExit("Secret NEWSLETTER_SEND_TOKEN não configurado.")
 
-          # Evita enviar publicações antigas no primeiro push.
           if not before or set(before) == {"0"}:
               print("Primeiro push: nenhuma newsletter será enviada.")
               raise SystemExit(0)
@@ -95,7 +94,6 @@ jobs:
               if not isinstance(atual, dict) or atual.get("published") is not True:
                   continue
 
-              # Notifica somente arquivo novo ou publicação recém-ativada.
               anterior_resultado = git("show", f"{before}:{caminho}")
               arquivo_novo = anterior_resultado.returncode != 0
 
@@ -125,13 +123,14 @@ jobs:
 
               categoria, pagina = categorias[nome_blog]
               titulo = str(atual.get("title", "")).strip()
+              resumo = str(atual.get("summary", "")).strip()
 
               if not titulo:
                   print(f"Publicação sem título, ignorada: {caminho}")
                   continue
 
               chave = "|".join([
-                  titulo.strip().lower(),
+                  titulo.lower(),
                   str(atual.get("date", "")).strip(),
                   categoria
               ])
@@ -140,14 +139,12 @@ jobs:
                   "https://andarilhoesuassombras.github.io/Andarilho/"
                   + pagina + "#post=" + quote(chave, safe="")
               )
-              
 
-              resumo = str(atual.get("summary", "")).strip()
               dados = json.dumps({
                   "id": arquivo.name,
                   "title": titulo,
-                   "summary": resumo,
-                   "category": categoria,
+                  "summary": resumo,
+                  "category": categoria,
                   "url": link
               }).encode("utf-8")
 
@@ -155,14 +152,14 @@ jobs:
                   worker + "/publish",
                   data=dados,
                   headers={
-                       "Content-Type": "application/json",
-                       "X-Newsletter-Token": token,
-                       "User-Agent": "CadernoDeIdeias-Newsletter/1.0"
-              },
+                      "Content-Type": "application/json",
+                      "X-Newsletter-Token": token,
+                      "User-Agent": "CadernoDeIdeias-Newsletter/1.0"
+                  },
                   method="POST"
               )
 
-                          try:
+              try:
                   print("Aguardando 2 minutos para o site atualizar...")
                   time.sleep(60)
 
@@ -175,6 +172,11 @@ jobs:
                   detalhe = erro.read().decode("utf-8", errors="replace")
                   raise SystemExit(
                       f"Falha ao notificar sobre {caminho}: HTTP {erro.code} - {detalhe}"
+                  )
+
+              except urllib.error.URLError as erro:
+                  raise SystemExit(
+                      f"Falha de conexão com o Worker: {erro}"
                   )
 
           print(f"Publicações enviadas ao Worker: {enviados}")

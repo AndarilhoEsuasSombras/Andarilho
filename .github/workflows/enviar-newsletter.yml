@@ -151,9 +151,10 @@ jobs:
                   worker + "/publish",
                   data=dados,
                   headers={
-                      "Content-Type": "application/json",
-                      "X-Newsletter-Token": token
-                  },
+                       "Content-Type": "application/json",
+                       "X-Newsletter-Token": token,
+                       "User-Agent": "CadernoDeIdeias-Newsletter/1.0"
+              },
                   method="POST"
               )
 

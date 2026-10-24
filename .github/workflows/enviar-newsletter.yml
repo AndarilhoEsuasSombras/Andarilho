@@ -165,10 +165,12 @@ jobs:
               try:
               print("Aguardando 2 minutos para o site atualizar...")
               time.sleep(60)
+              
                   with urllib.request.urlopen(requisicao, timeout=60) as resposta:
                       resultado = json.loads(resposta.read().decode("utf-8"))
                       print(f"Worker respondeu para {caminho}: {resultado}")
                       enviados += 1
+                      
               except urllib.error.HTTPError as erro:
                   detalhe = erro.read().decode("utf-8", errors="replace")
                   raise SystemExit(

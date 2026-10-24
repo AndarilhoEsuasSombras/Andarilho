@@ -800,3 +800,119 @@ nav a:not(.active):not([aria-current="page"]):hover {
     color: #a51f2b;
 }
 
+
+/* NEWSLETTER — PÁGINA INICIAL */
+
+.newsletter-section {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 36px;
+  margin: 48px 0;
+  padding: 42px 44px;
+  overflow: hidden;
+  background: #e8dfd0;
+  border-top: 1px solid #c5a77b;
+  border-bottom: 1px solid #c5a77b;
+}
+
+.newsletter-content {
+  position: relative;
+  z-index: 1;
+  max-width: 590px;
+}
+
+.newsletter-kicker {
+  margin: 0 0 14px;
+  color: #8a513d;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.newsletter-content h2 {
+  margin: 0 0 18px;
+  color: #24241f;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.newsletter-content h2 em {
+  color: #8a513d;
+  font-weight: 400;
+}
+
+.newsletter-description {
+  max-width: 500px;
+  margin: 0 0 24px;
+  color: #49463e;
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+.newsletter-button {
+  display: inline-block;
+  padding: 13px 19px;
+  border: 1px solid #8a513d;
+  background: #8a513d;
+  color: #fff;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-decoration: none;
+  transition: background .25s, color .25s;
+}
+
+.newsletter-button:hover {
+  background: transparent;
+  color: #8a513d;
+}
+
+.newsletter-note {
+  margin: 14px 0 0;
+  color: #6b655a;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.newsletter-decoration {
+  flex-shrink: 0;
+  width: 155px;
+  text-align: center;
+  color: #8a513d;
+  opacity: .8;
+}
+
+.newsletter-decoration span {
+  display: block;
+  font-family: Georgia, serif;
+  font-size: 88px;
+  line-height: 1;
+}
+
+.newsletter-decoration p {
+  margin: 12px 0 0;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 17px;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+  .newsletter-section {
+    padding: 30px 22px;
+  }
+
+  .newsletter-decoration {
+    display: none;
+  }
+
+  .newsletter-button {
+    max-width: 100%;
+    text-align: center;
+    line-height: 1.6;
+  }
+}
+

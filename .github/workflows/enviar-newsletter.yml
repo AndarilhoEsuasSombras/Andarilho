@@ -1,0 +1,172 @@
+
+name: Enviar newsletter de novas publicações
+
+on:
+  push:
+    paths:
+      - "content/posts/*.json"
+      - ".github/workflows/enviar-newsletter.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  enviar-newsletter:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar repositório com histórico
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detectar publicações novas
+        env:
+          GITHUB_BEFORE: ${{ github.event.before }}
+          GITHUB_AFTER: ${{ github.sha }}
+          NEWSLETTER_SEND_TOKEN: ${{ secrets.NEWSLETTER_SEND_TOKEN }}
+          WORKER_URL: https://caderno-newsletter.andarilhosuassombras.workers.dev
+        run: |
+          python <<'PY'
+          import json
+          import os
+          import subprocess
+          import urllib.request
+          import urllib.error
+          from pathlib import Path
+          from urllib.parse import quote
+
+          before = os.environ.get("GITHUB_BEFORE", "")
+          after = os.environ["GITHUB_AFTER"]
+          token = os.environ.get("NEWSLETTER_SEND_TOKEN", "")
+          worker = os.environ["WORKER_URL"].rstrip("/")
+
+          if not token:
+              raise SystemExit("Secret NEWSLETTER_SEND_TOKEN não configurado.")
+
+          # Evita enviar publicações antigas no primeiro push.
+          if not before or set(before) == {"0"}:
+              print("Primeiro push: nenhuma newsletter será enviada.")
+              raise SystemExit(0)
+
+          categorias = {
+              "filosofia": ("filosofia", "filosofia.html"),
+              "literatura": ("literatura", "literatura.html"),
+              "poesia": ("poesia", "poesia.html"),
+              "temas diversos": ("temas-diversos", "temas-diversos.html"),
+              "temas-diversos": ("temas-diversos", "temas-diversos.html")
+          }
+
+          def git(*args):
+              return subprocess.run(
+                  ["git", *args],
+                  capture_output=True,
+                  text=True,
+                  check=False
+              )
+
+          alterados = git(
+              "diff", "--name-only", "--diff-filter=AM",
+              before, after, "--", "content/posts/*.json"
+          )
+
+          if alterados.returncode != 0:
+              raise SystemExit("Não foi possível identificar os arquivos alterados.")
+
+          enviados = 0
+
+          for caminho in alterados.stdout.splitlines():
+              arquivo = Path(caminho)
+
+              if arquivo.parent != Path("content/posts") or arquivo.suffix != ".json":
+                  continue
+
+              atual_resultado = git("show", f"{after}:{caminho}")
+              if atual_resultado.returncode != 0:
+                  continue
+
+              try:
+                  atual = json.loads(atual_resultado.stdout)
+              except json.JSONDecodeError:
+                  print(f"JSON inválido, ignorado: {caminho}")
+                  continue
+
+              if not isinstance(atual, dict) or atual.get("published") is not True:
+                  continue
+
+              # Notifica somente arquivo novo ou publicação recém-ativada.
+              anterior_resultado = git("show", f"{before}:{caminho}")
+              arquivo_novo = anterior_resultado.returncode != 0
+
+              if arquivo_novo:
+                  deve_enviar = True
+              else:
+                  try:
+                      anterior = json.loads(anterior_resultado.stdout)
+                  except json.JSONDecodeError:
+                      anterior = {}
+
+                  deve_enviar = (
+                      isinstance(anterior, dict)
+                      and anterior.get("published") is not True
+                  )
+
+              if not deve_enviar:
+                  print(f"Sem novo disparo: {caminho}")
+                  continue
+
+              nome_blog = str(atual.get("blog", "")).strip().lower()
+              nome_blog = " ".join(nome_blog.split())
+
+              if nome_blog not in categorias:
+                  print(f"Categoria desconhecida, ignorada: {caminho} ({nome_blog})")
+                  continue
+
+              categoria, pagina = categorias[nome_blog]
+              titulo = str(atual.get("title", "")).strip()
+
+              if not titulo:
+                  print(f"Publicação sem título, ignorada: {caminho}")
+                  continue
+
+              chave = "|".join([
+                  titulo.strip().lower(),
+                  str(atual.get("date", "")).strip(),
+                  categoria
+              ])
+
+              link = (
+                  "https://andarilhoesuassombras.github.io/Andarilho/"
+                  + pagina + "#post=" + quote(chave, safe="")
+              )
+
+              dados = json.dumps({
+                  "id": arquivo.name,
+                  "title": titulo,
+                  "category": categoria,
+                  "url": link
+              }).encode("utf-8")
+
+              requisicao = urllib.request.Request(
+                  worker + "/publish",
+                  data=dados,
+                  headers={
+                      "Content-Type": "application/json",
+                      "X-Newsletter-Token": token
+                  },
+                  method="POST"
+              )
+
+              try:
+                  with urllib.request.urlopen(requisicao, timeout=60) as resposta:
+                      resultado = json.loads(resposta.read().decode("utf-8"))
+                      print(f"Worker respondeu para {caminho}: {resultado}")
+                      enviados += 1
+              except urllib.error.HTTPError as erro:
+                  detalhe = erro.read().decode("utf-8", errors="replace")
+                  raise SystemExit(
+                      f"Falha ao notificar sobre {caminho}: HTTP {erro.code} - {detalhe}"
+                  )
+
+          print(f"Publicações enviadas ao Worker: {enviados}")
+          PY

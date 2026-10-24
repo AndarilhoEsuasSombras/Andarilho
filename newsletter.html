@@ -1,72 +1,108 @@
 
+
 <style>
-/* Identidade visual da newsletter */
+/* NEWSLETTER — CADERNO DE IDEIAS */
 
 body {
+  margin: 0;
   background: #f3efe6;
   color: #24241f;
-  font-family: "Poppins", Arial, sans-serif;
+  font-family: Georgia, "Times New Roman", serif;
 }
 
-h1, h2, legend {
+main {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 55px 35px 70px;
+}
+
+h1, h2 {
+  margin: 0;
   color: #24241f;
   font-family: "Playfair Display", Georgia, serif;
+  font-size: 36px;
+  font-weight: 700;
 }
 
-a {
-  color: #8a513d;
+h1 {
+  padding-bottom: 15px;
+  border-bottom: 1px solid #24241f;
 }
 
-.newsletter-form,
+main > p {
+  margin: 20px 0 30px;
+  color: #626d54;
+  font-size: 17px;
+  line-height: 1.8;
+}
+
 form {
-  max-width: 720px;
-  margin: 30px auto;
-  padding: 30px;
-  background: #fbf9f4;
-  border: 1px solid #e8dfd0;
+  max-width: 700px;
+  margin: 35px 0;
+  padding: 0;
+  background: transparent;
+  border: none;
 }
 
-label {
+form > label {
+  display: block;
+  margin-bottom: 8px;
   color: #24241f;
+  font-size: 15px;
 }
 
-input[type="email"],
-input[type="text"] {
+input[type="email"] {
   box-sizing: border-box;
   width: 100%;
-  margin: 8px 0 18px;
-  padding: 12px;
+  margin: 0 0 24px;
+  padding: 13px 12px;
   border: 1px solid #c5a77b;
-  border-radius: 2px;
-  background: #fff;
+  border-radius: 0;
+  background: #fbf9f4;
   color: #24241f;
-  font: inherit;
+  font-family: inherit;
+  font-size: 15px;
 }
 
 fieldset {
-  margin: 18px 0;
-  padding: 16px;
+  margin: 0 0 20px;
+  padding: 16px 18px;
   border: 1px solid #c5a77b;
+  background: transparent;
+}
+
+legend {
+  padding: 0 6px;
+  color: #24241f;
+  font-size: 16px;
 }
 
 fieldset label {
   display: inline-block;
-  margin: 8px 12px 8px 0;
+  margin: 8px 15px 8px 0;
+  color: #24241f;
+  font-size: 15px;
 }
 
 input[type="checkbox"] {
   accent-color: #8a513d;
 }
 
+form > label:has(input[type="checkbox"]) {
+  display: block;
+  margin: 18px 0 14px;
+  line-height: 1.7;
+}
+
 button,
 input[type="submit"] {
-  display: inline-block;
   padding: 12px 22px;
   border: 1px solid #8a513d;
-  border-radius: 2px;
+  border-radius: 0;
   background: #8a513d;
   color: #fff;
-  font: inherit;
+  font-family: inherit;
+  font-size: 13px;
   cursor: pointer;
   transition: background .2s, color .2s;
 }
@@ -77,11 +113,23 @@ input[type="submit"]:hover {
   color: #8a513d;
 }
 
+input:focus-visible,
+button:focus-visible {
+  outline: 2px solid #8a513d;
+  outline-offset: 3px;
+}
+
 @media (max-width: 600px) {
-  form,
-  .newsletter-form {
-    margin: 20px 0;
-    padding: 20px;
+  main {
+    padding: 35px 20px 50px;
+  }
+
+  h1, h2 {
+    font-size: 29px;
+  }
+
+  fieldset label {
+    display: block;
   }
 }
 </style>

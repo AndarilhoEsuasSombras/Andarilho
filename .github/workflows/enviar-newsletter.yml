@@ -54,8 +54,8 @@ jobs:
               "literatura": ("literatura", "literatura.html"),
               "poesia": ("poesia", "poesia.html"),
               "temas diversos": ("temas-diversos", "temas-diversos.html"),
-              "temas-diversos": ("temas-diversos", "temas-diversos.html")
-              "blog": ("blog", "blog.html"),
+              "temas-diversos": ("temas-diversos", "temas-diversos.html"),
+              "blog": ("blog", "blog.html")
           }
 
           def git(*args):

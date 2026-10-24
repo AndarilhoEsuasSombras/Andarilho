@@ -1,254 +1,301 @@
 
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Receba por e-mail novas publicações do Caderno de Ideias.">
+  <title>Newsletter - Caderno de Ideias</title>
+  <link rel="icon" type="image/png" href="/Andarilho/favicon.png">
+  <link rel="stylesheet" href="styles.css">
 
-<style>
-/* NEWSLETTER — CADERNO DE IDEIAS */
-
-body {
-  margin: 0;
-  background: #f3efe6;
-  color: #24241f;
-  font-family: Georgia, "Times New Roman", serif;
-}
-
-main {
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 55px 35px 70px;
-}
-
-h1, h2 {
-  margin: 0;
-  color: #24241f;
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: 36px;
-  font-weight: 700;
-}
-
-h1 {
-  padding-bottom: 15px;
-  border-bottom: 1px solid #24241f;
-}
-
-main > p {
-  margin: 20px 0 30px;
-  color: #626d54;
-  font-size: 17px;
-  line-height: 1.8;
-}
-
-form {
-  max-width: 700px;
-  margin: 35px 0;
-  padding: 0;
-  background: transparent;
-  border: none;
-}
-
-form > label {
-  display: block;
-  margin-bottom: 8px;
-  color: #24241f;
-  font-size: 15px;
-}
-
-input[type="email"] {
-  box-sizing: border-box;
-  width: 100%;
-  margin: 0 0 24px;
-  padding: 13px 12px;
-  border: 1px solid #c5a77b;
-  border-radius: 0;
-  background: #fbf9f4;
-  color: #24241f;
-  font-family: inherit;
-  font-size: 15px;
-}
-
-fieldset {
-  margin: 0 0 20px;
-  padding: 16px 18px;
-  border: 1px solid #c5a77b;
-  background: transparent;
-}
-
-legend {
-  padding: 0 6px;
-  color: #24241f;
-  font-size: 16px;
-}
-
-fieldset label {
-  display: inline-block;
-  margin: 8px 15px 8px 0;
-  color: #24241f;
-  font-size: 15px;
-}
-
-input[type="checkbox"] {
-  accent-color: #8a513d;
-}
-
-form > label:has(input[type="checkbox"]) {
-  display: block;
-  margin: 18px 0 14px;
-  line-height: 1.7;
-}
-
-button,
-input[type="submit"] {
-  padding: 12px 22px;
-  border: 1px solid #8a513d;
-  border-radius: 0;
-  background: #8a513d;
-  color: #fff;
-  font-family: inherit;
-  font-size: 13px;
-  cursor: pointer;
-  transition: background .2s, color .2s;
-}
-
-button:hover,
-input[type="submit"]:hover {
-  background: transparent;
-  color: #8a513d;
-}
-
-input:focus-visible,
-button:focus-visible {
-  outline: 2px solid #8a513d;
-  outline-offset: 3px;
-}
-
-@media (max-width: 600px) {
-  main {
-    padding: 35px 20px 50px;
-  }
-
-  h1, h2 {
-    font-size: 29px;
-  }
-
-  fieldset label {
-    display: block;
-  }
-}
-</style>
-
-
-
-
-<section class="newsletter-section">
-  <h2>Receba novas ideias</h2>
-  <p>
-    Receba um aviso por e-mail sempre que um novo texto
-    for publicado nas categorias que você escolher.
-  </p>
-
-  <form id="newsletter-form">
-    <label for="newsletter-email">Seu e-mail</label>
-    <input
-      type="email"
-      id="newsletter-email"
-      name="email"
-      placeholder="voce@exemplo.com"
-      autocomplete="email"
-      required
-    >
-
-    <fieldset>
-      <legend>Quais assuntos você deseja receber?</legend>
-
-      <label>
-        <input type="checkbox" name="categories"
-          value="filosofia">
-        Filosofia
-      </label>
-
-      <label>
-        <input type="checkbox" name="categories"
-          value="literatura">
-        Literatura
-      </label>
-
-      <label>
-        <input type="checkbox" name="categories"
-          value="poesia">
-        Poesia
-      </label>
-
-      <label>
-        <input type="checkbox" name="categories"
-          value="temas-diversos">
-        Temas diversos
-      </label>
-    </fieldset>
-
-    <label class="newsletter-consent">
-      <input type="checkbox" id="newsletter-consent"
-        required>
-      Aceito receber e-mails sobre novas publicações
-      e entendo que posso cancelar a inscrição.
-    </label>
-
-    <button type="submit">Inscrever-se</button>
-    <p id="newsletter-status" role="status"
-      aria-live="polite"></p>
-  </form>
-</section>
-
-<script>
-(() => {
-  const form = document.getElementById("newsletter-form");
-  const status = document.getElementById("newsletter-status");
-
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const email = document.getElementById("newsletter-email")
-      .value.trim();
-
-    const categories = Array.from(
-      form.querySelectorAll(
-        'input[name="categories"]:checked'
-      )
-    ).map(input => input.value);
-
-    if (categories.length === 0) {
-      status.textContent =
-        "Escolha pelo menos uma categoria.";
-      return;
+  <style>
+    .newsletter-form-section {
+      max-width: 760px;
+      margin: 40px auto 70px;
     }
 
-    status.textContent = "Enviando inscrição...";
+    .newsletter-intro {
+      margin-bottom: 28px;
+      color: var(--dark, #24241f);
+      font-size: 17px;
+      line-height: 1.8;
+    }
 
-    try {
-      const response = await fetch(
-        "COLOQUE_AQUI_A_URL_DO_WORKER/subscribe",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ email, categories })
-        }
-      );
+    .newsletter-form {
+      padding: 28px 0;
+      border-top: 1px solid var(--dark, #24241f);
+    }
 
-      const result = await response.json();
+    .newsletter-form label,
+    .newsletter-form legend {
+      color: var(--dark, #24241f);
+      font-size: 14px;
+    }
 
-      if (!response.ok) {
-        throw new Error(
-          result.error || "Não foi possível concluir a inscrição."
-        );
+    .newsletter-form .email-label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .newsletter-form input[type="email"] {
+      display: block;
+      box-sizing: border-box;
+      width: 100%;
+      padding: 13px 12px;
+      margin-bottom: 25px;
+      border: 1px solid #c5a77b;
+      border-radius: 0;
+      background: #fbf9f4;
+      color: #24241f;
+      font: inherit;
+    }
+
+    .newsletter-form fieldset {
+      padding: 18px;
+      margin: 0 0 22px;
+      border: 1px solid #c5a77b;
+    }
+
+    .newsletter-form fieldset label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin: 10px 18px 5px 0;
+    }
+
+    .newsletter-form input[type="checkbox"] {
+      accent-color: #a51f2b;
+    }
+
+    .newsletter-consent {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      margin: 22px 0;
+      line-height: 1.7;
+    }
+
+    .newsletter-consent input {
+      margin-top: 5px;
+      accent-color: #a51f2b;
+    }
+
+    .newsletter-submit {
+      padding: 12px 22px;
+      border: 1px solid #a51f2b;
+      border-radius: 0;
+      background: #a51f2b;
+      color: white;
+      font: inherit;
+      cursor: pointer;
+      transition: background .2s, color .2s;
+    }
+
+    .newsletter-submit:hover {
+      background: transparent;
+      color: #a51f2b;
+    }
+
+    .newsletter-message {
+      margin-top: 20px;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .newsletter-message:empty {
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      .newsletter-form-section {
+        margin-top: 25px;
       }
 
-      status.textContent =
-        "Inscrição recebida! Obrigado por acompanhar o Caderno de Ideias.";
-
-      form.reset();
-    } catch (error) {
-      status.textContent =
-        "Não foi possível concluir a inscrição. Tente novamente.";
+      .newsletter-form fieldset label {
+        display: flex;
+        margin: 14px 0;
+      }
     }
-  });
-})();
-</script>
+  </style>
+</head>
+
+<body>
+  <div class="topline"></div>
+
+  <div class="wrap">
+
+    <header class="masthead">
+      <div>
+        <p class="eyebrow">Arquivo de escritos · desde 2026</p>
+        <a class="brand" href="index.html">
+          Andarilho <span>e suas</span> Sombras
+        </a>
+      </div>
+      <div class="tagline">Livros, artigos, poemas - pensamentos.</div>
+    </header>
+
+    <nav class="nav" aria-label="Menu principal">
+      <div class="nav-track">
+        <a href="pesquisa.html" class="nav-search"
+           aria-label="Pesquisar" title="Pesquisar">
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="18" height="18" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round"
+               stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle>
+            <line x1="16.2" y1="16.2" x2="21" y2="21"></line>
+          </svg>
+        </a>
+        <a href="filosofia.html">Filosofia</a>
+        <a href="literatura.html">Literatura</a>
+        <a href="poesia.html">Poesia</a>
+        <a href="temas-diversos.html">Temas diversos</a>
+        <a href="blog.html">Blog</a>
+        <a href="videos.html">Videoaulas</a>
+        <a href="https://app.pagescms.org/" target="_blank"
+           rel="noopener noreferrer">Área do autor</a>
+      </div>
+    </nav>
+
+    <main>
+      <section class="page-intro">
+        <p class="kicker">Caderno / Correspondência</p>
+        <h1>Newsletter<span style="color:var(--red)">.</span></h1>
+        <p>Novas ideias, diretamente na sua caixa de entrada.</p>
+      </section>
+
+      <section class="newsletter-form-section">
+        <p class="newsletter-intro">
+          Receba um aviso por e-mail sempre que um novo texto for publicado
+          nas categorias que você escolher. Filosofia, literatura, poesia
+          e temas diversos — leituras para quem ainda acredita na força
+          das palavras.
+        </p>
+
+        <form id="newsletter-form" class="newsletter-form">
+          <label class="email-label" for="newsletter-email">
+            Seu e-mail
+          </label>
+          <input
+            type="email"
+            id="newsletter-email"
+            name="email"
+            placeholder="voce@exemplo.com"
+            autocomplete="email"
+            required
+          >
+
+          <fieldset>
+            <legend>Quais assuntos você deseja receber?</legend>
+
+            <label>
+              <input type="checkbox" name="categories" value="filosofia">
+              Filosofia
+            </label>
+
+            <label>
+              <input type="checkbox" name="categories" value="literatura">
+              Literatura
+            </label>
+
+            <label>
+              <input type="checkbox" name="categories" value="poesia">
+              Poesia
+            </label>
+
+            <label>
+              <input type="checkbox" name="categories" value="temas-diversos">
+              Temas diversos
+            </label>
+          </fieldset>
+
+          <label class="newsletter-consent">
+            <input type="checkbox" name="consent" required>
+            <span>
+              Aceito receber e-mails sobre novas publicações e entendo
+              que posso cancelar a inscrição.
+            </span>
+          </label>
+
+          <button class="newsletter-submit" type="submit">
+            Inscrever-se ↗
+          </button>
+
+          <p id="newsletter-message"
+             class="newsletter-message"
+             role="status"
+             aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <p class="footer-mark">© 2026 · Andarilho e Suas Sombras</p>
+      <p>
+        <a href="#topo"
+           onclick="event.preventDefault(); window.scrollTo({top:0,behavior:'smooth'});">
+          Voltar ao início ↑
+        </a>
+      </p>
+      <p class="footer-mark">Em busca da palavra nua.</p>
+    </div>
+  </footer>
+
+  <script>
+    const NEWSLETTER_WORKER =
+      "https://caderno-newsletter.andarilhosuassombras.workers.dev";
+
+    const form = document.getElementById("newsletter-form");
+    const message = document.getElementById("newsletter-message");
+
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const email = document.getElementById("newsletter-email").value.trim();
+      const categories = Array.from(
+        form.querySelectorAll('input[name="categories"]:checked')
+      ).map(input => input.value);
+
+      if (categories.length === 0) {
+        message.textContent = "Selecione pelo menos um assunto.";
+        return;
+      }
+
+      const button = form.querySelector('button[type="submit"]');
+      button.disabled = true;
+      button.textContent = "Enviando...";
+      message.textContent = "";
+
+      try {
+        const response = await fetch(NEWSLETTER_WORKER + "/subscribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, categories, consent: true })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.error || result.message ||
+            "Não foi possível realizar a inscrição.");
+        }
+
+        message.textContent = result.message ||
+          "Confira seu e-mail para confirmar a inscrição.";
+        form.reset();
+
+      } catch (error) {
+        message.textContent = error.message ||
+          "Erro de conexão. Tente novamente.";
+      } finally {
+        button.disabled = false;
+        button.textContent = "Inscrever-se ↗";
+      }
+    });
+  </script>
+</body>
+</html>

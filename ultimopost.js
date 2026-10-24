@@ -174,9 +174,16 @@
     );
 
     const link = criar("a", "text-link", "Ler publicação ↗");
-    link.href = BASE_PATH + (
-      categorias[normalizar(tema)] || "index.html"
-    );
+link.href =
+  BASE + destino +
+  '#post=' + encodeURIComponent(
+    [
+      String(post.title || '').trim().toLowerCase(),
+      String(post.date || '').trim(),
+      normalizar(post.blog)
+    ].join('|')
+  );
+
 
     cartao.append(link);
     container.replaceChildren(cartao);
